@@ -1,0 +1,61 @@
+---
+- name: Verify
+  hosts: "{{ molecule_robotframework_hosts | d('all') }}"
+  tasks:
+    - name: Install pip (centos7)
+      become: yes
+      block:
+        - name: Install epel (centos7)
+          yum:
+            state: present
+            name: epel-release
+        - name: Install pip (centos7)
+          yum:
+            state: present
+            name: python-pip
+      when:
+        - ansible_distribution == 'CentOS'
+        - ansible_distribution_major_version == '7'
+
+    - name: Install pip (centos8)
+      become: yes
+      yum:
+        state: present
+        name: python3-pip
+      when:
+        - ansible_distribution == 'CentOS'
+        - ansible_distribution_major_version == '8'
+
+    - name: Install pip (fedora)
+      become: yes
+      yum:
+        state: present
+        name: python3-pip
+      when:
+        - ansible_distribution == 'Fedora'
+
+    - name: Install pip (debian)
+      become: yes
+      apt:
+        state: present
+        name: python3-pip
+      when: ansible_os_family == 'Debian'
+
+    - name: Install Robot Framework
+      become: yes
+      pip:
+        state: present
+        name: robotframework
+
+    - name: Install Robot Framework Libraries
+      become: yes
+      pip:
+        state: present
+        name: "{{ molecule_yml.verifier.libraries }}"
+      when: molecule_yml.verifier.libraries is defined
+
+    - name: Install Robot Framework Test Data
+      copy:
+        src: "{{ molecule_yml.verifier.testdata.src | d('tests') }}"
+        dest: "{{ molecule_yml.verifier.testdata.dest | d('./') }}"
+      when: molecule_yml.verifier.testdata is defined

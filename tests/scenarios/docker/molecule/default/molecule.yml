@@ -1,0 +1,26 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance01
+    image: "${IMAGE:-docker.io/pycontribs/centos:8}"
+    pre_build_image: true
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_VERBOSITY: 0
+    ANSIBLE_STDOUT_CALLBACK: unixy
+verifier:
+  name: robotframework
+  libraries:
+    - robotframework-openafslibrary
+  testdata:
+    src: tests
+    dest: .
+  options:
+    exitonerror: yes
+    exclude: bogus
+  data_sources:
+    - tests/example.robot

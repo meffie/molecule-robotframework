@@ -1,0 +1,39 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: delegated
+  provider:
+    name: libvirt
+  options:
+    connection: local
+    host: localhost
+    loglevel: info
+    python_interpreter: /usr/bin/python3
+platforms:
+  - name: instance01
+    template: "${IMAGE:-generic-centos-8}"
+  - name: instance02
+    template: "${IMAGE:-generic-centos-8}"
+    groups:
+      - testers
+provisioner:
+  name: ansible
+  #playbooks:
+  #  fetch_results: xfetch_results.yml
+  env:
+    ANSIBLE_VERBOSITY: 0
+    ANSIBLE_STDOUT_CALLBACK: unixy
+verifier:
+  name: robotframework
+  group: testers
+  libraries:
+    - robotframework-openafslibrary
+  testdata:
+    src: tests
+    dest: .
+  options:
+    exitonerror: yes
+    exclude: bogus
+  data_sources:
+    - tests/example.robot
