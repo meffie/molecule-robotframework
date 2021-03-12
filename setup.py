@@ -14,18 +14,21 @@ setuptools.setup(
     author='Michael Meffie',
     author_email='mmeffie@sinenomine.net',
     description=description,
-    long_description=description,
-    # url=
+    long_description=open('README.rst').read(),
+    long_description_content_type='text/x-rst',
+    url='https://github.com/meffie/molecule-robotframework',
     packages=setuptools.find_packages(where='src'),
     package_dir={'': 'src'},
-    #include_package_data=True,
+    include_package_data=True,
     entry_points={
         'molecule.verifier': [
             'robotframework = molecule_robotframework.robotframework:Robotframework',
         ],
     },
     install_requires=[
-        'molecule',
+        # molecule plugins are not allowed to mention Ansible as a direct dependency
+        'molecule>=3.2.0',
+        'pyyaml>=5.1,<6',
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
