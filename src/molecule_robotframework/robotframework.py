@@ -29,6 +29,28 @@ from molecule.api import Verifier
 
 LOG = logger.get_logger(__name__)
 
+def dict2args(data):
+    """Convert a dictionary of options to command like arguments.
+
+    Note: This implementation supports arguments with multiple values.
+    """
+    result = []
+    for k, v in data.items():
+        if v is not False:
+            prefix = "-" if len(k) == 1 else "--"
+            flag = f"{prefix}{k}".replace("_", "-")
+            if v is True:
+                # {'foo': True} produces --foo without any values
+                result.append(flag)
+            elif isinstance(v, (tuple, list)):
+                # {'foo': ['a', 'b']} produces --foo a --foo b
+                for x in v:
+                    result.extend([flag, str(x)])
+            else:
+                # {'foo': 'bar'} produces --foo bar
+                result.extend([flag, str(v)])
+    return result
+
 class Robotframework(Verifier):
     """
     `Robotframework`_ is not default test verifier.
@@ -162,8 +184,7 @@ class Robotframework(Verifier):
 
     @property
     def data_sources(self):
-        data_sources = self._config.config['verifier'].get('data_sources', ['tests'])
-        return data_sources
+        return self._config.config['verifier'].get('data_sources', ['tests'])
 
     @property
     def test_hosts(self):
@@ -172,11 +193,15 @@ class Robotframework(Verifier):
 
     def bake(self, name, host):
         """Prepare a command to run robot on a test instance."""
-        robot_cmd=[
+
+        # The robot command line.
+        robot_cmd = [
             'robot',
-            *util.dict2args(self.robot_options),
+            *dict2args(self.robot_options),
             *self.data_sources # last
         ]
+        LOG.info('robot command: %s' % ' '.join(robot_cmd))
+
         ansible_connection = host.get('ansible_connection', 'ssh')
         if ansible_connection == 'docker':
             cmd = [
