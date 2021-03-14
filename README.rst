@@ -23,7 +23,7 @@ Install molecule-robotframework:
 
    pip install molecule molecule-robotframework
 
-Create a new role with molecule using the roboteframework verifier:
+Create a new role with molecule using the robotframework verifier:
 
 .. code-block::
 
@@ -40,7 +40,7 @@ controller. The default location is the directory ``molecule/<scenario_name>/tes
 
 Configure ``molecule.yml`` with the desired robot options in the verifier section.
 
-Execute `test` on the role or scenario to run the verify playbook and run
+Execute ``molecule test`` on the role or scenario to run the verify playbook and run
 ``robot`` on the molecule instance.
 
 .. _authors:
