@@ -39,7 +39,8 @@ init: .venv
 lint: init
 	$(PYFLAKES) src/*/*.py
 	$(PYFLAKES) tests/*.py
-	$(YAMLLINT) tests/scenarios/*/*
+	$(YAMLLINT) src/*/playbooks/*.yml
+	$(YAMLLINT) tests/scenarios/*/molecule/default/*.yml
 	$(PYTHON) setup.py -q checkdocs
 
 check test: init lint

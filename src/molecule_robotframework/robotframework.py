@@ -58,8 +58,12 @@ class Robotframework(Verifier):
     The robotframework test verifier runs the verify playbook to install
     Robot Framework, external Robot Framework libraries, and the test data
     sources to the test instances, then runs the ``robot`` command, showing the
-    live test output. Finally, the optional ``fetch_results`` playbook is
+    live test output. Finally, the optional ``verify_fetch_report`` playbook is
     executed to retrieve the test logs.
+
+    Bundled ``verify.yml`` and ``verify_fetch_report.yml`` playbooks are provided
+    by the plugin. You can customize these plays by creating ``verify.yml``
+    and/or ``verify_fetch_report.yml`` in your scenario directory.
 
     The testing can be disabled by setting ``enabled`` to False.
 
@@ -166,18 +170,21 @@ class Robotframework(Verifier):
     @property
     def playbooks(self):
         if not self._playbooks:
-            # Inject a default fetch_results playbook filename.
-            if 'fetch_results' not in self._config.config['provisioner']['playbooks']:
-                self._config.config['provisioner']['playbooks']['fetch_results'] = 'fetch_results.yml'
+            # Inject a default verify_fetch_report playbook filename.
+            if 'verify_fetch_report' not in self._config.config['provisioner']['playbooks']:
+                self._config.config['provisioner']['playbooks']['verify_fetch_report'] = 'verify_fetch_report.yml'
             self._playbooks = ansible_playbooks.AnsiblePlaybooks(self._config)
         return self._playbooks
 
     def execute_playbook(self, name):
+        """Excute the named playbook."""
+        # First look for the user provided playbook in the scenario directory.
+        # If not found, use the playbook bundled with the plugin.
         playbook = self.playbooks._get_playbook(name)
-        if not os.path.exists(playbook):
-            LOG.info('Skipping playbook f{name}, not found.')
-            return
+        if not playbook or not os.path.isfile(playbook):
+            playbook = self._get_bundled_playbook(name)
         pb = ansible_playbook.AnsiblePlaybook(playbook, self._config)
+        # Target just the testers (all by default.)
         pb.add_cli_arg('extra_vars', f'molecule_robotframework_hosts={self.test_group}')
         pb.execute()
 
@@ -249,7 +256,7 @@ class Robotframework(Verifier):
         robotframework, libraries, and test data. Next, run ``robot`` on each
         host in the test group (``all`` by default). Show the live output of
         the ``robot`` command. Finally, run an optional playbook called
-        ``fetch_results`` to retrieve the ``robot`` output files.
+        ``verify_fetch_report`` to retrieve the ``robot`` output files.
         """
         if not self.enabled:
             LOG.warning('Skipping, verifier is disabled.')
@@ -270,7 +277,7 @@ class Robotframework(Verifier):
                 )
 
         LOG.info('Retrieve output/log/report files.')
-        self.execute_playbook('fetch_results')
+        self.execute_playbook('verify_fetch_report')
 
         LOG.info('Verifier completed successfully.')
 
@@ -285,5 +292,13 @@ class Robotframework(Verifier):
         }
 
     def template_dir(self):
-        p = os.path.abspath(os.path.join(os.path.dirname(__file__), "cookiecutter"))
-        return p
+        """Return the path to the cookiecutter templates for molecule init."""
+        return os.path.abspath(os.path.join(os.path.dirname(__file__), "cookiecutter"))
+
+    def _get_bundled_playbook(self, name):
+        """Lookup our bundled playbook."""
+        playbooks = os.path.abspath(os.path.join(os.path.dirname(__file__), "playbooks"))
+        path = os.path.join(playbooks, f"{name}.yml")
+        if not os.path.isfile(path):
+            raise AssertionError(f"Failed to lookup bundled {name}.yml playbook.")
+        return path

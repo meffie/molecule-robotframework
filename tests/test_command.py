@@ -25,10 +25,6 @@ def test_molecule_init():
     with runner.isolated_filesystem():
         result = run_command(cmd)
         assert result.returncode == 0
-        verify_yml = Path('./test-init/molecule/default/verify.yml')
-        assert verify_yml.exists()
-        assert verify_yml.is_file()
-        assert 'robotframework' in verify_yml.read_text()
 
 @pytest.mark.parametrize(
     ('scenario_to_test', 'image'),
@@ -47,7 +43,7 @@ def test_molecule_scenario(scenario_to_test, image):
     basedir = Path(__file__).resolve().parent
     testdir = basedir / 'scenarios' / scenario_to_test
     with change_dir(testdir):
-        env = yaml.dump({'IMAGE': image})
+        env = yaml.dump({'IMAGE': image}, explicit_start=True)
         Path('.env.yml').write_text(env)
         result = run_command(['molecule', 'test'])
         #tmp.write_text(result.output)

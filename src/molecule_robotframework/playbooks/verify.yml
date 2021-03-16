@@ -1,0 +1,53 @@
+---
+- name: Verify
+  hosts: "{{ molecule_robotframework_hosts | d('all') }}"
+  vars:
+    test_directory: "{{ molecule_yml.verifier.test_directory | d('.') }}"
+    resource_directory: "{{ molecule_yml.verifier.resource_directory | d('.') }}"
+    test_data: "{{ molecule_yml.verifier.test_data | d([]) }}"
+    resources: "{{ molecule_yml.verifier.resources | d([]) }}"
+  tasks:
+    # Cache installation state for faster verify reruns.
+    - name: Install Robot Framework
+      when: not (ansible_local.get('robotframework', 'no') | bool)
+      block:
+        - import_role:
+            name: robotframework
+          vars:
+            robotframework_package_name: "{{ molecule_yml.verifier.package_name | d('robotframework') }}"
+            robotframework_package_version_spec: "{{ molecule_yml.verifier.package_version_spec | d('') }}"
+            robotframework_external_libraries: "{{ molecule_yml.verifier.libraries | d([]) }}"
+
+        - name: Ensure facts directory exists.
+          become: yes
+          file:
+            state: directory
+            path: /etc/ansible/facts.d/
+
+        - name: Save Robot Framework installed fact.
+          become: yes
+          copy:
+            content: '"yes"'
+            dest: /etc/ansible/facts.d/robotframework.fact
+            mode: "644"
+
+    - name: Ensure Robot Framework test and resource directories exist.
+      file:
+        state: directory
+        path: "{{ test_directory }}"
+        mode: "755"
+      with_items:
+        - "{{ test_directory }}"
+        - "{{ resource_directory }}"
+
+    - name: Copy Robot Framework test data.
+      copy:
+        src: "{{ item }}"
+        dest: "{{ test_directory }}/"
+      with_items: "{{ test_data }}"
+
+    - name: Setup Robot Framework resources.
+      template:
+        src: "{{ item }}"
+        dest: "{{ resource_directory }}/{{ item | basename | replace('.j2', '') }}"
+      with_items: "{{ resources }}"

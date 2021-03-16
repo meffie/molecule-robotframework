@@ -6,7 +6,7 @@ Use Robot Framework as a Molecule verifier.
 
 Runs the ``verify`` playbook to install Robot Framework, extra libraries, and
 test data, then runs ``robot`` on the Molecule managed instances, showing the
-live output as tests are executed.  Finally, runs an optional ``fetch_results``
+live output as tests are executed.  Finally, runs an optional ``verify_fetch_report``
 playbook to retrieve the generated Robot Framework report and logs.
 
 Documentation

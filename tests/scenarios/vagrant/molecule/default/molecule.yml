@@ -10,16 +10,15 @@ platforms:
     box: generic/centos8
 provisioner:
   name: ansible
-  env:
-    ANSIBLE_VERBOSITY: 0
-    ANSIBLE_STDOUT_CALLBACK: unixy
+  #env:
+  #  ANSIBLE_VERBOSITY: 0
+  #  ANSIBLE_STDOUT_CALLBACK: unixy
 verifier:
   name: robotframework
   libraries:
     - robotframework-openafslibrary
   test_data:
-    - ${MOLECULE_SCENARIO_DIRECTORY}/tests
-  test_dest: '.'
+    - ${MOLECULE_SCENARIO_DIRECTORY}/tests/
   options:
     exitonerror: yes
     exclude: bogus

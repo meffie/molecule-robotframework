@@ -9,6 +9,3 @@ build/
 
 # test artifacts
 .env.yml
-output.xml
-log.html
-report.html

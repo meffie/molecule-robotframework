@@ -22,16 +22,21 @@ platforms:
 provisioner:
   name: ansible
   #env:
-  #  ANSIBLE_VERBOSITY: 0
+  #  ANSIBLE_VERBOSITY: 1
   #  ANSIBLE_STDOUT_CALLBACK: unixy
+  inventory:
+    group_vars:
+      all:
+        example: hello world
 verifier:
   name: robotframework
   group: testers
   libraries:
     - robotframework-openafslibrary
   test_data:
-    - ${MOLECULE_SCENARIO_DIRECTORY}/tests
-  test_dest: '.'
+    - ${MOLECULE_SCENARIO_DIRECTORY}/tests/
+  resources:
+    - ${MOLECULE_SCENARIO_DIRECTORY}/templates/myvars.py.j2
   options:
     exitonerror: yes
     exclude: bogus

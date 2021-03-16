@@ -1,9 +1,0 @@
----
-- name: Verify
-  hosts: "{{ molecule_robotframework_hosts | d('all') }}"
-  vars:
-    robotframework_external_libraries: "{{ molecule_yml.verifier.libraries | d([]) }}"
-    robotframework_test_directory: "{{ molecule_yml.verifier.test_dest | d('.') }}"
-    robotframework_test_data: "{{ molecule_yml.verifier.test_data | d(['tests']) }}"
-  roles:
-    - robotframework
