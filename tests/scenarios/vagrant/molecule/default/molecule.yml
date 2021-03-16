@@ -17,11 +17,11 @@ verifier:
   name: robotframework
   libraries:
     - robotframework-openafslibrary
-  testdata:
-    src: tests
-    dest: .
+  test_data:
+    - ${MOLECULE_SCENARIO_DIRECTORY}/tests
+  test_dest: '.'
   options:
     exitonerror: yes
     exclude: bogus
   data_sources:
-    - tests/example.robot
+    - example.robot

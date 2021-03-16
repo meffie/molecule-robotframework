@@ -100,18 +100,29 @@ class Robotframework(Verifier):
           env:
             ROBOT_SYSLOG_FILE: /tmp/syslog.txt
 
-    Path to the test data sources to copy to the test instance and
-    destination path on the test instance. The source defaults to 'test'
-    in the scenario directory. The destination defaults to '.' on the
-    test instance.
+    Paths to the test data sources to be copied to the test instance(s)
+    Provide a list of fully qualified paths to directories on the
+    controller. The default is an empty list.  An external ``verify.yml``
+    playbook can be provided if you want to copy your tests from another
+    source, such as a git checkout.
 
     .. code-block:: yaml
 
         verifier:
           name: robotframework
-          testdata:
-            src: /path/to/my/tests
-            dest: /tmp/tests
+          test_data:
+            - /path/to/my/tests/on/the/controller
+            - /path/to/more/tests/on/the/controller
+
+    The destination path to install ``test_data`` files on the
+    test instance(s). This directory will be created on the instance
+    if it does not already exist.
+
+    .. code-block:: yaml
+
+        verifier:
+          name: robotframework
+          test_dest: /path/to/install/test_files/on/instance
 
     External Robot Framework libraries to install on the test instances
     with pip.

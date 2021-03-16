@@ -13,27 +13,28 @@ driver:
 platforms:
   - name: instance01
     template: "${IMAGE:-generic-centos-8}"
+    groups:
+      - testers
   - name: instance02
     template: "${IMAGE:-generic-centos-8}"
     groups:
       - testers
 provisioner:
   name: ansible
-  #playbooks:
-  #  fetch_results: xfetch_results.yml
-  env:
-    ANSIBLE_VERBOSITY: 0
-    ANSIBLE_STDOUT_CALLBACK: unixy
+  #env:
+  #  ANSIBLE_VERBOSITY: 0
+  #  ANSIBLE_STDOUT_CALLBACK: unixy
 verifier:
   name: robotframework
   group: testers
   libraries:
     - robotframework-openafslibrary
-  testdata:
-    src: tests
-    dest: .
+  test_data:
+    - ${MOLECULE_SCENARIO_DIRECTORY}/tests
+  test_dest: '.'
   options:
     exitonerror: yes
     exclude: bogus
+    report: index.html
   data_sources:
-    - tests/example.robot
+    - example.robot

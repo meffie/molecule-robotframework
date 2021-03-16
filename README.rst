@@ -23,7 +23,13 @@ Install molecule-robotframework:
 
    pip install molecule molecule-robotframework
 
-Create a new role with molecule using the robotframework verifier:
+Install the `Ansible Robot Framework`_ role.
+
+.. _`Ansible Robot Framework`: https://github.com/meffie/ansible-role-robotframework
+
+   ansible-galaxy role install meffie.robotframework
+
+Create a new role with molecule using the ``robotframework`` verifier:
 
 .. code-block::
 
@@ -38,7 +44,7 @@ Create a new scenario for an existing role or playbook:
 Copy the Robot Framework test data (.robot files) to a directory the Ansible
 controller. The default location is the directory ``molecule/<scenario_name>/tests``.
 
-Configure ``molecule.yml`` with the desired robot options in the verifier section.
+Configure the desired ``robot`` options in the ``molecule.yml`` verifier section.
 
 Execute ``molecule test`` on the role or scenario to run the verify playbook and run
 ``robot`` on the molecule instance.
