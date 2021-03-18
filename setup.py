@@ -2,7 +2,7 @@ import setuptools
 import re
 
 name = 'molecule-robotframework'
-description='Robotframework Molecule Plugin :: run molecule tests with Robotframework as verifier'
+description='Robot Framework Molecule Plugin :: run molecule tests with Robot Framework as verifier'
 
 def find_version():
     text = open('src/%s/__init__.py' % name.replace('-', '_')).read()
