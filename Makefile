@@ -1,7 +1,8 @@
 # Copyright 2020-2021 Sine Nomine Associates
 
-.PHONY: help init lint test sdist wheel rpm deb upload clean distclean
+.PHONY: help init lint import test sdist wheel rpm deb upload clean distclean
 
+ROLE_VERSION=1.0.0
 PYTHON3=python3
 BIN=.venv/bin
 PIP=$(BIN)/pip
@@ -17,6 +18,7 @@ help:
 	@echo "targets:"
 	@echo "  init       create python virtual env"
 	@echo "  lint       run linter"
+	@echo "  import     import external ansible roles"
 	@echo "  test       run tests"
 	@echo "  sdist      create source distribution"
 	@echo "  wheel      create wheel distribution"
@@ -42,6 +44,14 @@ lint: init
 	$(YAMLLINT) src/*/playbooks/*.yml
 	$(YAMLLINT) tests/scenarios/*/molecule/default/*.yml
 	$(PYTHON) setup.py -q checkdocs
+
+import:
+	mkdir -p src/molecule_robotframework/playbooks/roles/robotframework
+	git clone https://github.com/meffie/ansible-role-robotframework.git /tmp/ansible-role-robotframework.git
+	(cd /tmp/ansible-role-robotframework.git && git archive $(ROLE_VERSION)) | \
+	  (cd src/molecule_robotframework/playbooks/roles/robotframework && tar xf -)
+	rm -rf src/molecule_robotframework/playbooks/roles/robotframework/molecule
+	rm -rf /tmp/ansible-role-robotframework.git
 
 check test: init lint
 	. .venv/bin/activate && pytest -v $(T) tests

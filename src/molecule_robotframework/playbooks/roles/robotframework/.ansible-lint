@@ -1,0 +1,6 @@
+skip_list:
+  - 'yaml'
+  - 'role-name'
+  - 'unnamed-task'
+  # ansible-lint complains because copy uses the umask.
+  - 'risky-file-permissions'

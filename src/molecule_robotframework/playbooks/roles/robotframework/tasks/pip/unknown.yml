@@ -1,0 +1,3 @@
+---
+- fail:
+    msg: Unsupported operating system.

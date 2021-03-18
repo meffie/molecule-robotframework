@@ -1,0 +1,12 @@
+---
+- name: Ensure EPEL repository is installed.
+  become: yes
+  yum:
+    state: present
+    name: epel-release
+
+- name: Ensure python pip is installed.
+  become: yes
+  yum:
+    state: present
+    name: python-pip

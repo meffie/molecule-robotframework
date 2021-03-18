@@ -23,12 +23,6 @@ Install molecule-robotframework:
 
    pip install molecule molecule-robotframework
 
-Install the `Ansible Robot Framework`_ role.
-
-.. _`Ansible Robot Framework`: https://github.com/meffie/ansible-role-robotframework
-
-   ansible-galaxy role install meffie.robotframework
-
 Create a new role with molecule using the ``robotframework`` verifier:
 
 .. code-block::

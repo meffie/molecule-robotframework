@@ -1,0 +1,22 @@
+---
+- name: Ensure python pip is installed.
+  include_tasks: "{{ item }}"
+  with_first_found:
+    - "{{ role_path }}/tasks/pip/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "{{ role_path }}/tasks/pip/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ role_path }}/tasks/pip/{{ ansible_distribution }}.yml"
+    - "{{ role_path }}/tasks/pip/{{ ansible_os_family }}.yml"
+    - "{{ role_path }}/tasks/pip/unknown.yml"
+
+- name: Install Robot Framework.
+  become: yes
+  pip:
+    state: present
+    name: "{{ robotframework_package_name }}{{ robotframework_package_version_spec }}"
+
+- name: Install external Robot Framework Libraries.
+  become: yes
+  pip:
+    state: present
+    name: "{{ robotframework_external_libraries }}"
+  when: robotframework_external_libraries | count > 0
