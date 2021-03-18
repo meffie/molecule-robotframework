@@ -32,7 +32,7 @@ help:
 	$(PYTHON3) -m venv .venv
 	$(PIP) install -U pip
 	$(PIP) install wheel
-	$(PIP) install pyflakes pylint pytest collective.checkdocs twine
+	$(PIP) install pyflakes pylint yamllint pytest collective.checkdocs twine
 	$(PIP) install molecule[ansible] molecule-docker molecule-vagrant python-vagrant
 	$(PIP) install -e .
 
