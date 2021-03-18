@@ -9,6 +9,9 @@ test data, then runs ``robot`` on the Molecule managed instances, showing the
 live output as tests are executed.  Finally, runs an optional ``verify_fetch_report``
 playbook to retrieve the generated Robot Framework report and logs.
 
+Bundled ``verify`` and ``verify_fetch_report`` playbooks are included with
+the plugin. You can override these with custom playbooks if desired.
+
 Documentation
 =============
 
