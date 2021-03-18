@@ -22,6 +22,12 @@
 
 import os
 
+try:
+    from shlex import join as join_args
+    assert join_args  # hush pyflakes
+except ImportError:
+    from subprocess import list2cmdline as join_args
+
 from molecule import logger
 from molecule import util
 from molecule.provisioner import ansible_playbook, ansible_playbooks
@@ -40,15 +46,28 @@ def dict2args(data):
             prefix = "-" if len(k) == 1 else "--"
             flag = f"{prefix}{k}".replace("_", "-")
             if v is True:
-                # {'foo': True} produces --foo without any values
                 result.append(flag)
             elif isinstance(v, (tuple, list)):
-                # {'foo': ['a', 'b']} produces --foo a --foo b
                 for x in v:
                     result.extend([flag, str(x)])
             else:
-                # {'foo': 'bar'} produces --foo bar
                 result.extend([flag, str(v)])
+    return result
+
+def dict2lines(data, getlines=False):
+    """Convert a dictionary of options to a list of lines for robot --argumentfile."""
+    result = []
+    for k, v in data.items():
+        if v is not False:
+            prefix = "-" if len(k) == 1 else "--"
+            flag = f"{prefix}{k}".replace("_", "-")
+            if v is True:
+                result.append(flag + '\n')
+            elif isinstance(v, (tuple, list)):
+                for x in v:
+                    result.append(join_args([flag, str(x)]) + '\n')
+            else:
+                result.append(join_args([flag, str(v)]) + '\n')
     return result
 
 class Robotframework(Verifier):
@@ -209,6 +228,10 @@ class Robotframework(Verifier):
         inventory = self._config.provisioner.inventory
         return inventory.get(self.test_group, inventory.get('all', {})).get('hosts', {})
 
+    @property
+    def argumentfile(self):
+        return os.path.join(self._config.scenario.ephemeral_directory, 'robotrc')
+
     def bake(self, name, host):
         """Prepare a command to run robot on a test instance."""
 
@@ -261,6 +284,11 @@ class Robotframework(Verifier):
         if not self.enabled:
             LOG.warning('Skipping, verifier is disabled.')
             return
+
+        # Save the robot args to a file in our ephemeral directory before
+        # running the verify playbook.
+        with open(self.argumentfile, 'w') as fh:
+            fh.writelines(dict2lines(self.robot_options))
 
         LOG.info('Running robotframework verifier playbook.')
         self.execute_playbook('verify')

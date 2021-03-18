@@ -51,3 +51,9 @@
         src: "{{ item }}"
         dest: "{{ resource_directory }}/{{ item | basename | replace('.j2', '') }}"
       with_items: "{{ resources }}"
+
+    - name: Copy Robot Framework argument file.
+      copy:
+        src: "{{ molecule_ephemeral_directory }}/robotrc"
+        dest: "robotrc"
+        mode: "644"
