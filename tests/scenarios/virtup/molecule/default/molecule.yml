@@ -2,14 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: delegated
-  provider:
-    name: libvirt
-  options:
-    connection: local
-    host: localhost
-    loglevel: info
-    python_interpreter: /usr/bin/python3
+  name: virtup
 platforms:
   - name: instance01
     template: "${IMAGE:-generic-centos-8}"
@@ -21,9 +14,9 @@ platforms:
       - testers
 provisioner:
   name: ansible
-  #env:
-  #  ANSIBLE_VERBOSITY: 1
-  #  ANSIBLE_STDOUT_CALLBACK: unixy
+  env:
+    ANSIBLE_VERBOSITY: 1
+    ANSIBLE_STDOUT_CALLBACK: yaml
   inventory:
     group_vars:
       all:

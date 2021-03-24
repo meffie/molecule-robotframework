@@ -33,7 +33,7 @@ help:
 	$(PIP) install -U pip
 	$(PIP) install wheel
 	$(PIP) install pyflakes pylint yamllint pytest collective.checkdocs twine
-	$(PIP) install molecule[ansible] molecule-docker molecule-vagrant python-vagrant
+	$(PIP) install molecule[ansible] molecule-docker molecule-vagrant molecule-virtup python-vagrant
 	$(PIP) install -e .
 
 init: .venv

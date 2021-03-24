@@ -29,10 +29,10 @@ def test_molecule_init():
 @pytest.mark.parametrize(
     ('scenario_to_test', 'image'),
     [
-        ('libvirt', 'generic-centos-7'),
-        ('libvirt', 'generic-centos-8'),
-        ('libvirt', 'generic-debian-9'),
-        ('libvirt', 'generic-debian-10'),
+        ('virtup', 'generic-centos-7'),
+        ('virtup', 'generic-centos-8'),
+        ('virtup', 'generic-debian-9'),
+        ('virtup', 'generic-debian-10'),
         ('docker', 'docker.io/pycontribs/centos:8'),
         ('vagrant', 'generic/centos8'),
     ]
