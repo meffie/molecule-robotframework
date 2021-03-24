@@ -8,7 +8,7 @@ PIP=$(BIN)/pip
 YAMLLINT=$(BIN)/yamllint
 ANSIBLE_LINT=$(BIN)/ansible-lint
 
-SCENARIO=default
+DRIVER=docker
 IMAGE=centos:8
 
 help:
@@ -25,7 +25,7 @@ help:
 	$(PYTHON3) -m venv .venv
 	$(PIP) install -U pip
 	$(PIP) install wheel
-	$(PIP) install molecule[ansible,docker] yamllint ansible-lint
+	$(PIP) install molecule[ansible,docker] molecule-virtup yamllint ansible-lint
 
 init: .venv
 
@@ -34,13 +34,7 @@ lint: init
 	. $(BIN)/activate && $(ANSIBLE_LINT) .
 
 check test: init lint
-	. $(BIN)/activate && IMAGE=$(IMAGE) molecule test -s $(SCENARIO)
-
-test-all:
-	$(MAKE) test IMAGE=generic-centos-7 SCENARIO=libvirt
-	$(MAKE) test IMAGE=generic-centos-8 SCENARIO=libvirt
-	$(MAKE) test IMAGE=generic-debian-9 SCENARIO=libvirt
-	$(MAKE) test IMAGE=generic-debian-10 SCENARIO=libvirt
+	. $(BIN)/activate && IMAGE=$(IMAGE) molecule test -d $(DRIVER)
 
 clean:
 	rm -rf .pytest_cache .cache .env.yml

@@ -12,7 +12,10 @@
   become: yes
   pip:
     state: present
-    name: "{{ robotframework_package_name }}{{ robotframework_package_version_spec }}"
+    name:
+      # Install pyyaml so `robot` will support yaml format variable files.
+      - pyyaml
+      - "{{ robotframework_package_name }}{{ robotframework_package_version_spec }}"
 
 - name: Install external Robot Framework Libraries.
   become: yes
