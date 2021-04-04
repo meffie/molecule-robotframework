@@ -76,8 +76,8 @@ clean:
 	rm -rf src/*/__pycache__
 	rm -rf tests/__pycache__
 	rm -rf tests/scenarios/*/*/molecule/default/library/__pycache__/
+	rm -rf build dist
+	rm -rf .eggs *.egg-info src/*.egg-info
 
 distclean: clean
-	rm -rf .eggs *.egg-info src/*.egg-info
-	rm -rf build dist
 	rm -rf .venv
