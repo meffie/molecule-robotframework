@@ -1,6 +1,6 @@
 # Copyright 2020-2021 Sine Nomine Associates
 
-.PHONY: help init lint import test sdist wheel rpm deb upload clean distclean
+.PHONY: help init lint import test docs sdist wheel rpm deb upload clean distclean
 
 ROLE_VERSION=1.1.0
 PYTHON3=python3
@@ -20,6 +20,7 @@ help:
 	@echo "  lint       run linter"
 	@echo "  import     import external ansible roles"
 	@echo "  test       run tests"
+	@echo "  docs       build html docs"
 	@echo "  sdist      create source distribution"
 	@echo "  wheel      create wheel distribution"
 	@echo "  rpm        create rpm package"
@@ -33,6 +34,7 @@ help:
 	$(PIP) install -U pip
 	$(PIP) install wheel
 	$(PIP) install pyflakes pylint yamllint pytest collective.checkdocs twine
+	$(PIP) install sphinx sphinx-rtd-theme
 	$(PIP) install molecule[ansible] molecule-docker molecule-vagrant molecule-virtup python-vagrant
 	$(PIP) install -e .
 
@@ -56,6 +58,9 @@ import:
 check test: init lint
 	. .venv/bin/activate && pytest -v $(T) tests
 
+doc docs:
+	$(MAKE) -C docs html
+
 sdist: init
 	$(PYTHON) setup.py sdist
 
@@ -78,6 +83,7 @@ clean:
 	rm -rf tests/scenarios/*/*/molecule/default/library/__pycache__/
 	rm -rf build dist
 	rm -rf .eggs *.egg-info src/*.egg-info
+	rm -rf docs/build
 
 distclean: clean
 	rm -rf .venv
