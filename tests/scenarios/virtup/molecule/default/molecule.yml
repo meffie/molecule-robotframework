@@ -5,13 +5,13 @@ driver:
   name: virtup
 platforms:
   - name: instance01
-    template: "${IMAGE:-generic-centos-8}"
+    template: "${IMAGE:-generic/debian10}"
     groups:
       - testers
   - name: instance02
-    template: "${IMAGE:-generic-centos-8}"
+    template: "${IMAGE:-generic/debian10}"
     groups:
-      - testers
+      - not_testers
 provisioner:
   name: ansible
   env:
@@ -26,8 +26,14 @@ verifier:
   group: testers
   libraries:
     - robotframework-openafslibrary
+  test_directory: "."
+  resource_directory: "."
   test_data:
     - ${MOLECULE_SCENARIO_DIRECTORY}/tests/
+  test_repos: []
+  #  - name: openafs-robotest
+  #    repo: https://github.com/openafs-contrib/openafs-robotest.git
+  #    version: master
   resources:
     - ${MOLECULE_SCENARIO_DIRECTORY}/templates/myvars.py.j2
   options:

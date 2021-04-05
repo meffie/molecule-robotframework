@@ -4,10 +4,15 @@
   vars:
     test_directory: "{{ molecule_yml.verifier.test_directory | d('.') }}"
     resource_directory: "{{ molecule_yml.verifier.resource_directory | d('.') }}"
-    test_data: "{{ molecule_yml.verifier.test_data | d([]) }}"
     resources: "{{ molecule_yml.verifier.resources | d([]) }}"
+    test_data: "{{ molecule_yml.verifier.test_data | d([]) }}"
+    test_repos: "{{ molecule_yml.verifier.test_repos | d([]) }}"
   tasks:
+    #------------------------------------------------------------------
+    # Install Robot Framework.
+    #
     # Cache installation state for faster verify reruns.
+    #
     - name: Install Robot Framework
       when: not (ansible_local.get('robotframework', 'no') | bool)
       block:
@@ -34,19 +39,16 @@
     - name: Ensure Robot Framework test and resource directories exist.
       file:
         state: directory
-        path: "{{ test_directory }}"
+        path: "{{ item }}"
         mode: "755"
       with_items:
         - "{{ test_directory }}"
         - "{{ resource_directory }}"
 
-    - name: Copy Robot Framework test data.
-      copy:
-        src: "{{ item }}"
-        dest: "{{ test_directory }}/"
-      with_items: "{{ test_data }}"
-
-    - name: Setup Robot Framework resources.
+    #------------------------------------------------------------------
+    # Copy variables files and robot arguments from the controller.
+    #
+    - name: Copy Robot Framework resources.
       template:
         src: "{{ item }}"
         dest: "{{ resource_directory }}/{{ item | basename | replace('.j2', '') }}"
@@ -57,3 +59,43 @@
         src: "{{ molecule_ephemeral_directory }}/robotrc"
         dest: "robotrc"
         mode: "644"
+
+    #------------------------------------------------------------------
+    # Copy test data from controller
+    #
+    - name: Copy Robot Framework test data files.
+      copy:
+        src: "{{ item }}"
+        dest: "{{ test_directory }}/"
+      with_items: "{{ test_data }}"
+
+    #------------------------------------------------------------------
+    # Checkout test data from git repos.
+    #
+    - name: Ensure git is installed (debian)
+      become: yes
+      apt:
+        state: present
+        name: git
+      when:
+        - ansible_pkg_mgr == 'apt'
+        - test_repos | count > 0
+
+    - name: Ensure git is installed (redhat)
+      become: yes
+      yum:
+        state: present
+        name: git
+      when:
+        - ansible_pkg_mgr in ('yum', 'dnf')
+        - test_repos | count > 0
+
+    - name: Checkout Robot Framework test data repo.
+      git:
+        dest: "{{ test_directory }}/{{ item_repo.name }}"
+        repo: "{{ item_repo.repo }}"
+        version: "{{ item_repo.version | d('master') }}"
+      register: git_results
+      loop: "{{ test_repos }}"
+      loop_control:
+        loop_var: item_repo
