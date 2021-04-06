@@ -12,10 +12,7 @@ playbook to retrieve the generated Robot Framework report and logs.
 Bundled ``verify`` and ``verify_fetch_report`` playbooks are included with
 the plugin. You can override these with custom playbooks if desired.
 
-Documentation
-=============
-
-.. _installation-and-usage:
+Documentation: `https://molecule-robot-framework-plugin.readthedocs.io <https://molecule-robot-framework-plugin.readthedocs.io>`_
 
 Installation and Usage
 ======================
