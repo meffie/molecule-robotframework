@@ -8,7 +8,7 @@
     log_file: "{{ molecule_yml.verifier.get('options', {}).get('log', 'log.html') }}"
     report_file: "{{ molecule_yml.verifier.get('options', {}).get('report', 'report.html') }}"
   tasks:
-    - name: Fetch report and logs
+    - name: Download test reports and logs.
       fetch:
         flat: "{{ (ansible_play_hosts | count == 1) | ternary('yes', 'no') }}"
         src: "{{ output_dir }}/{{ item }}"
@@ -17,3 +17,8 @@
         - "{{ output_file }}"
         - "{{ log_file }}"
         - "{{ report_file }}"
+      register: fetch_results
+
+    - name: Downloaded test reports and logs
+      debug:
+        msg: "{{ fetch_results.results | map(attribute='dest') }}"

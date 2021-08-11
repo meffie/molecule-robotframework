@@ -290,7 +290,7 @@ class Robotframework(Verifier):
         with open(self.argumentfile, 'w') as fh:
             fh.writelines(dict2lines(self.robot_options))
 
-        LOG.info('Running robotframework verifier playbook.')
+        LOG.info('Prepare for verification.')
         self.execute_playbook('verify')
 
         LOG.info('Running robotframework verifier tests.')
@@ -306,7 +306,7 @@ class Robotframework(Verifier):
                 verified = False
                 LOG.error(f"Failed to run command: {result.args}")
 
-        LOG.info('Retrieve output/log/report files.')
+        LOG.info('Download report files.')
         self.execute_playbook('verify_fetch_report')
 
         if verified:
