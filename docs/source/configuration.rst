@@ -14,10 +14,22 @@ group
 
   Default: all
 
-libraries
-  A list of Robot Framework libraries to be installed with ``pip``.
+install
+  Indicates if Robot Framework and the Test Libraries are to be installed before
+  running the tests. Values are 'yes' (True), 'no' (False), or 'auto'.  When
+  'auto', Robot Framework will be installed the first time the verifier is run
+  on an instance, and the installation will be skipped on subsequent runs.  The
+  python ``pip`` program will be installed on the instance, and then ``pip``
+  will be used to install Robot Framework and any libraries listed by ``libraries``
+  (see below).
 
-  Default: empty list
+  Default: auto
+
+libraries
+  A list of Robot Framework libraries to be installed with ``pip`` when ``install``
+  is true or is 'auto' and this is the first time the verifier is run.
+
+  Default: (empty list)
 
 test_directory
   Test destination path.

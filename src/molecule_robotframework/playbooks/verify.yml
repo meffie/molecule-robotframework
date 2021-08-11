@@ -11,30 +11,13 @@
     #------------------------------------------------------------------
     # Install Robot Framework.
     #
-    # Cache installation state for faster verify reruns.
-    #
-    - name: Install Robot Framework
-      when: not (ansible_local.get('robotframework', 'no') | bool)
-      block:
-        - import_role:
-            name: robotframework
-          vars:
-            robotframework_package_name: "{{ molecule_yml.verifier.package_name | d('robotframework') }}"
-            robotframework_package_version_spec: "{{ molecule_yml.verifier.package_version_spec | d('') }}"
-            robotframework_external_libraries: "{{ molecule_yml.verifier.libraries | d([]) }}"
-
-        - name: Ensure facts directory exists.
-          become: yes
-          file:
-            state: directory
-            path: /etc/ansible/facts.d/
-
-        - name: Save Robot Framework installed fact.
-          become: yes
-          copy:
-            content: '"yes"'
-            dest: /etc/ansible/facts.d/robotframework.fact
-            mode: "644"
+    - import_role:
+        name: robotframework
+      vars:
+        robotframework_install: "{{ molecule_yml.verifier.install | d('auto') }}"
+        robotframework_package_name: "{{ molecule_yml.verifier.package_name | d('robotframework') }}"
+        robotframework_package_version_spec: "{{ molecule_yml.verifier.package_version_spec | d('') }}"
+        robotframework_external_libraries: "{{ molecule_yml.verifier.libraries | d([]) }}"
 
     - name: Ensure Robot Framework test and resource directories exist.
       file:
