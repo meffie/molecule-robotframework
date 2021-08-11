@@ -294,20 +294,25 @@ class Robotframework(Verifier):
         self.execute_playbook('verify')
 
         LOG.info('Running robotframework verifier tests.')
+        verified = None
         for name, host in self.test_hosts.items():
             self.bake(name, host)
             LOG.info(f'Running robotframework tests on instance {name}.')
             result = util.run_command(self._robot_command, debug=self._config.debug)
-            if result.returncode != 0:
-                util.sysexit_with_message(
-                    f"Failed to run robot: {result.returncode}, command was: {result.args}",
-                    result.returncode,
-                )
+            LOG.info(f"robot return code: {result.returncode}")
+            if result.returncode == 0:
+                verified = True
+            else:
+                verified = False
+                LOG.error(f"Failed to run command: {result.args}")
 
         LOG.info('Retrieve output/log/report files.')
         self.execute_playbook('verify_fetch_report')
 
-        LOG.info('Verifier completed successfully.')
+        if verified:
+            LOG.info('Verifier completed successfully.')
+        else:
+            LOG.error('Verification failed.')
 
     def schema(self):
         return {
