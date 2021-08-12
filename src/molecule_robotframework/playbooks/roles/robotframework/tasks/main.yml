@@ -1,21 +1,34 @@
 ---
-#- debug:
-#    var: robotframework_install
 
-- name: Set Robot Framework install flag.
-  set_fact:
-    _robotframework_install: "{{ robotframework_install | bool }}"
-  when:
-    - robotframework_install is defined
-    - robotframework_install != 'auto'
+# robotframework_install values:
+#   'always' | 'yes' | True => install pip, RF, and libs
+#   'never' | 'no' | False  => do not install pip, RF, and libs
+#   'auto' | (undefined)    => install pip, RF, and libs once
 
-- name: Lookup Robot Framework install flag.
-  set_fact:
+- set_fact:
     _robotframework_install: "{{ not (ansible_local.get('robotframework_installed', 'no') | bool) }}"
+  when: robotframework_install is undefined or robotframework_install | lower == 'auto'
+
+- set_fact:
+    _robotframework_install: "{{ robotframework_install }}"
+  when:
+    - _robotframework_install is undefined
+    - robotframework_install is defined
+    - robotframework_install | type_debug == 'bool'
+
+- set_fact:
+    _robotframework_install: "{{ _mode.get(robotframework_install | d('') | lower, 'error') }}"
+  vars:
+    _mode:
+      always: True
+      never: False
+      yes: True
+      no: False
   when: _robotframework_install is undefined
 
-#- debug:
-#    var: _robotframework_install
+- fail:
+    msg: "Invalid robotframework_install value: {{ robotframework_install | d('(undefined)')}}"
+  when: _robotframework_install == 'error'
 
 - name: Ensure python pip is installed.
   include_tasks: "{{ item }}"

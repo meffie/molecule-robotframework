@@ -8,20 +8,23 @@ name
   Required: yes
 
 group
-  The ansible group to run ``robot``. Set this to a group name when
+  The Ansible group to run ``robot``. Set this to a group name when
   you have multiple instances in the scenario and you want to limit
   which instances are verified.
 
   Default: all
 
 install
-  Indicates if Robot Framework and the Test Libraries are to be installed before
-  running the tests. Values are 'yes' (True), 'no' (False), or 'auto'.  When
-  'auto', Robot Framework will be installed the first time the verifier is run
-  on an instance, and the installation will be skipped on subsequent runs.  The
-  python ``pip`` program will be installed on the instance, and then ``pip``
-  will be used to install Robot Framework and any libraries listed by ``libraries``
-  (see below).
+  Indicates if Robot Framework and the test libraries are to be installed before
+  running the tests. Values are ``always``, ``never``, or ``auto``. When the
+  value is ``never``, the verifier does not install the Robot Framework. When
+  the value is ``always``, the verifier ensures the Robot Framework is installed
+  before running the ``robot`` command. When the value is ``auto``, the verifier
+  installs the Robot Framework the first time it is run, and installation will
+  be skipped on subsequent runs.  When Robot Framework is installed, first
+  ``pip`` will be installed on the instance, then ``pip`` will be used to
+  install Robot Framework and any test libraries indicated by the ``libraries``
+  configuration option (see ``libraries`` below).
 
   Default: auto
 
@@ -50,7 +53,7 @@ test_data
 test_repos
   A list of dictionaries which describe git repositories of Robot Framework test data (test suites)
   to be installed on the test instances. Each item should have a ``name``, ``repo`` URI, and optional
-  ``version`` (branch name or tag). Eample.
+  ``version`` (branch name or tag).
 
 resources
   A list of jinja2 templates on the controller to be rendered to the ``resource_directory`` on the
