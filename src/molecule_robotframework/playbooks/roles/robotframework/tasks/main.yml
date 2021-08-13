@@ -1,36 +1,26 @@
 ---
-
 # robotframework_install values:
-#   'always' | 'yes' | True => install pip, RF, and libs
-#   'never' | 'no' | False  => do not install pip, RF, and libs
-#   'auto' | (undefined)    => install pip, RF, and libs once
-
-- set_fact:
-    _robotframework_install: "{{ not (ansible_local.get('robotframework_installed', 'no') | bool) }}"
-  when: robotframework_install is undefined or robotframework_install | lower == 'auto'
-
-- set_fact:
-    _robotframework_install: "{{ robotframework_install }}"
-  when:
-    - _robotframework_install is undefined
-    - robotframework_install is defined
-    - robotframework_install | type_debug == 'bool'
-
-- set_fact:
-    _robotframework_install: "{{ _mode.get(robotframework_install | d('') | lower, 'error') }}"
+#   'always' | 'yes' | True => install robot framework
+#   'never' | 'no' | False  => do not install robot framework
+#   'auto' | (undefined)    => install robot framework once
+- name: Lookup install mode.
   vars:
-    _mode:
-      always: True
-      never: False
-      yes: True
-      no: False
-  when: _robotframework_install is undefined
+     _ri: "{{ robotframework_install | d('auto') | lower }}"
+     _is_bool: "{{ (robotframework_install | d('auto') | type_debug) == 'bool' }}"
+     _mode:
+       auto: "{{ not (ansible_local.get('robotframework_installed', 'no') | bool) }}"
+       always: True
+       never: False
+       yes: True
+       no: False
+  set_fact:
+     _robotframework_install: "{{ _ri if _is_bool else _mode.get(_ri, 'error') }}"
 
 - fail:
-    msg: "Invalid robotframework_install value: {{ robotframework_install | d('(undefined)')}}"
+    msg: "Invalid robotframework_install value: {{ robotframework_install | d('(undefined)') }}"
   when: _robotframework_install == 'error'
 
-- name: Ensure python pip is installed.
+- name: Install python pip.
   include_tasks: "{{ item }}"
   with_first_found:
     - "{{ role_path }}/tasks/pip/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
