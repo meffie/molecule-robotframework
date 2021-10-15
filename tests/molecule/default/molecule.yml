@@ -14,9 +14,6 @@ platforms:
       - not_testers
 provisioner:
   name: ansible
-  env:
-    ANSIBLE_VERBOSITY: 1
-    ANSIBLE_STDOUT_CALLBACK: yaml
   inventory:
     group_vars:
       all:
