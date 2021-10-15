@@ -10,3 +10,7 @@
   yum:
     state: present
     name: python-pip
+
+- name: Set package versions.
+  set_fact:
+    pyyaml_version: "<6"

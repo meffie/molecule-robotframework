@@ -2,7 +2,7 @@
 
 .PHONY: help init lint import test docs sdist wheel rpm deb upload clean distclean
 
-ROLE_VERSION=1.1.0
+ROLE_VERSION=1.2.0
 PYTHON3=python3
 BIN=.venv/bin
 PIP=$(BIN)/pip

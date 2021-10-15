@@ -36,7 +36,7 @@
     state: present
     name:
       # Install pyyaml so `robot` will support yaml format variable files.
-      - pyyaml
+      - "pyyaml{{ pyyaml_version | d('') }}"
       - "{{ robotframework_package_name }}{{ robotframework_package_version_spec }}"
   when: _robotframework_install
 
