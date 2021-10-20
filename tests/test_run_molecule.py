@@ -6,7 +6,15 @@ from tempfile import TemporaryDirectory
 
 import pytest
 
-platforms = ['centos8', 'centos7', 'debian10', 'debian9']
+platforms = [
+    'centos8',
+    'centos7',
+    'fedora34',
+    'fedora33',
+    #'debian11',
+    'debian10',
+]
+
 logdir = Path('/tmp/molecule-robotframework')
 driver = os.getenv('MOLECULE_DRIVER')
 

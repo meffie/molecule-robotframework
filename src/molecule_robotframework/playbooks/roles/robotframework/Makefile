@@ -8,16 +8,13 @@ PIP=$(BIN)/pip
 YAMLLINT=$(BIN)/yamllint
 ANSIBLE_LINT=$(BIN)/ansible-lint
 
-DRIVER=docker
-IMAGE=centos:8
-
 help:
 	@echo "usage: make <target>"
 	@echo ""
 	@echo "targets:"
 	@echo "  init       create python virtual env"
 	@echo "  lint       run linter"
-	@echo "  test       run tests"
+	@echo "  test       run tests (requires docker)"
 	@echo "  clean      remove generated files"
 	@echo "  distclean  remove generated files and virtual env"
 
@@ -34,7 +31,12 @@ lint: init
 	. $(BIN)/activate && $(ANSIBLE_LINT) .
 
 check test: init lint
-	. $(BIN)/activate && IMAGE=$(IMAGE) molecule test -d $(DRIVER)
+	. $(BIN)/activate && IMAGE=centos:8 molecule test
+	. $(BIN)/activate && IMAGE=centos:7 molecule test
+	. $(BIN)/activate && IMAGE=fedora:34 molecule test
+	. $(BIN)/activate && IMAGE=fedora:33 molecule test
+	. $(BIN)/activate && IMAGE=debian:11 molecule test
+	. $(BIN)/activate && IMAGE=debian:10 molecule test
 
 clean:
 	rm -rf .pytest_cache .cache .env.yml

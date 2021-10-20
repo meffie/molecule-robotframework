@@ -14,6 +14,15 @@ the execute ``robot`` to run tests.
 
 Ansible 2.10 or later.
 
+## Supported platforms
+
+* RedHat/CentOS 8
+* RedHat/CentOS 7
+* Fedora 34
+* Fedora 33
+* Debian 11
+* Debian 10
+
 ## Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):

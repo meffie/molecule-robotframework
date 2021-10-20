@@ -11,10 +11,15 @@ galaxy_info:
   platforms:
     - name: EL
       versions:
-        - 7
         - 8
+        - 7
+    - name: Fedora
+      versions:
+        - 34
+        - 33
     - name: Debian
-      version:
-        - buster
+      versions:
+        - 11
+        - 10
   galaxy_tags:
     - robotframework
