@@ -14,3 +14,4 @@
 - name: Set package versions.
   set_fact:
     pyyaml_version: "<6"
+    pip_executable: "pip"

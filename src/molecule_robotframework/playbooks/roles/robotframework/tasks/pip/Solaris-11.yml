@@ -1,0 +1,9 @@
+---
+- name: Ensure python pip is installed.
+  become: yes
+  pkg5:
+     state: present
+     name: pip-35
+- name: Set package versions and pip executable.
+  set_fact:
+    pip_executable: "pip-3.5"
