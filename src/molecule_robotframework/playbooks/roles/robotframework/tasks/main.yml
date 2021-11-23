@@ -38,6 +38,7 @@
       # Install pyyaml so `robot` will support yaml format variable files.
       - "pyyaml{{ pyyaml_version | d('') }}"
       - "{{ robotframework_package_name }}{{ robotframework_package_version_spec }}"
+    executable: "{{ pip_executable | d('pip3') }}"
   when: _robotframework_install
 
 - name: Install Robot Framework Test Libraries.
@@ -45,6 +46,7 @@
   pip:
     state: present
     name: "{{ robotframework_external_libraries }}"
+    executable: "{{ pip_executable | d('pip3') }}"
   when:
     - _robotframework_install
     - robotframework_external_libraries | count > 0
