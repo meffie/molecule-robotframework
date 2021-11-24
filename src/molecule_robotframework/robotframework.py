@@ -245,25 +245,23 @@ class Robotframework(Verifier):
 
         ansible_connection = host.get('ansible_connection', 'ssh')
         if ansible_connection == 'docker':
-            cmd = [
-                'docker',
-                'exec',
-                name,
-                *robot_cmd  # last
-            ]
+            cmd = ['docker', 'exec', name, *robot_cmd]
         elif ansible_connection == 'ssh':
-            ssh_args = host['ansible_ssh_common_args'].split()
-            ssh_dest = '@'.join((host['ansible_user'], host['ansible_host']))
-            cmd = [
-                'ssh',
-                '-p', host['ansible_port'],
-                '-i', host['ansible_private_key_file'],
-                *ssh_args,
-                ssh_dest,
-                *robot_cmd, # last
-            ]
+            ssh_host = host.get('ansible_host', name)
+            ssh_user = host.get('ansible_user', None)
+            ssh_port = host.get('ansible_port', None)
+            ssh_ident = host.get('ansible_private_key_file', None)
+            ssh_args = host.get('ansible_ssh_common_args', '').split()
+            if ssh_port:
+                ssh_args.extend(['-p', str(ssh_port)])
+            if ssh_ident:
+                ssh_args.extend(['-i', ssh_ident])
+            ssh_dest = '@'.join([ssh_user, ssh_host]) if ssh_user else ssh_host
+            LOG.info('ssh command: %s' % ' '.join(['ssh', *ssh_args, ssh_dest]))
+
+            cmd = ['ssh', *ssh_args, ssh_dest, *robot_cmd]
         else:
-            util.sysexit_with_message("Unsupported connection: {{ansible_connection}}", 1)
+            util.sysexit_with_message(f'Unsupported connection {ansible_connection}', 1)
 
         self._robot_command = util.BakedCommand(
             cmd=cmd,
