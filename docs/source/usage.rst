@@ -27,6 +27,7 @@ Example code:
          exitonerror: yes
          exclude: bogus
          report: index.html
+         debugfile: debug.log
       data_sources:
          - example.robot
 
