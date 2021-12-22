@@ -3,6 +3,7 @@
 .PHONY: help init lint import test docs sdist wheel rpm deb upload clean distclean
 
 ROLE_VERSION=1.4.0
+ROLE_REPO=https://github.com/meffie/ansible-role-robotframework.git
 PYTHON3=python3
 BIN=.venv/bin
 PIP=$(BIN)/pip
@@ -49,7 +50,7 @@ lint: init
 
 import:
 	mkdir -p src/molecule_robotframework/playbooks/roles/robotframework
-	git clone https://github.com/meffie/ansible-role-robotframework.git /tmp/ansible-role-robotframework.git
+	git clone $(ROLE_REPO) /tmp/ansible-role-robotframework.git
 	(cd /tmp/ansible-role-robotframework.git && git archive $(ROLE_VERSION)) | \
 	  (cd src/molecule_robotframework/playbooks/roles/robotframework && tar xf -)
 	rm -rf src/molecule_robotframework/playbooks/roles/robotframework/molecule
