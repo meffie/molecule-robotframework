@@ -1,6 +1,0 @@
----
-- name: Ensure python pip is installed.
-  become: yes
-  yum:
-    state: present
-    name: python3-pip
