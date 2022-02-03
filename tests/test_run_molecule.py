@@ -7,11 +7,12 @@ from tempfile import TemporaryDirectory
 import pytest
 
 platforms = [
-    'centos8',
+    'alma8',
+    'rocky8',
     'centos7',
-    'fedora34',
     'fedora33',
-    #'debian11',
+    'fedora35',
+    'debian11',
     'debian10',
 ]
 
