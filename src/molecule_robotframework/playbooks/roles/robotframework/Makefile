@@ -14,7 +14,7 @@ help:
 	@echo "targets:"
 	@echo "  init       create python virtual env"
 	@echo "  lint       run linter"
-	@echo "  test       run tests (requires docker)"
+	@echo "  test       run tests"
 	@echo "  clean      remove generated files"
 	@echo "  distclean  remove generated files and virtual env"
 
@@ -24,17 +24,19 @@ help:
 	$(PIP) install wheel
 	$(PIP) install molecule[ansible,docker] molecule-virtup yamllint ansible-lint
 
-init: .venv
+.config:
+	mkdir -p .config/molecule
+
+init: .venv .config
 
 lint: init
 	$(YAMLLINT) tasks/*.yml tasks/pip/*.yml defaults/*.yml
 	. $(BIN)/activate && $(ANSIBLE_LINT) .
 
 check test: init lint
-	. $(BIN)/activate && IMAGE=centos:8 molecule test
-	. $(BIN)/activate && IMAGE=centos:7 molecule test
+	. $(BIN)/activate && IMAGE=rocky:8 molecule test
 	. $(BIN)/activate && IMAGE=fedora:34 molecule test
-	. $(BIN)/activate && IMAGE=fedora:33 molecule test
+	. $(BIN)/activate && IMAGE=fedora:35 molecule test
 	. $(BIN)/activate && IMAGE=debian:11 molecule test
 	. $(BIN)/activate && IMAGE=debian:10 molecule test
 
@@ -42,4 +44,4 @@ clean:
 	rm -rf .pytest_cache .cache .env.yml
 
 distclean: clean
-	rm -rf .venv
+	rm -rf .venv .config
