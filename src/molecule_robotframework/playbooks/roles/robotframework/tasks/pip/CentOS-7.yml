@@ -15,3 +15,4 @@
   set_fact:
     pyyaml_version: "<6"
     pip_executable: "pip"
+    robotframework_package_version_spec: "<5"

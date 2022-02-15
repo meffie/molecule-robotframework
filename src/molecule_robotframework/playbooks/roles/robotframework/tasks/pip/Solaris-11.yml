@@ -7,3 +7,4 @@
 - name: Set package versions and pip executable.
   set_fact:
     pip_executable: "pip-3.5"
+    robotframework_package_version_spec: "<5"
