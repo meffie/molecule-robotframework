@@ -1,10 +1,17 @@
 ---
+- name: "Solaris 11.4: Get python mediator"
+  command: pkg mediator -H python3
+  register: python3_results
+
+- set_fact:
+    python3_version: "{{ python3_results.stdout.split()[2] }}"
+
 - name: Ensure python pip is installed.
   become: yes
   pkg5:
      state: present
-     name: pip-35
+     name: pip-{{ python3_version | replace('.','') }}
 - name: Set package versions and pip executable.
   set_fact:
-    pip_executable: "pip-3.5"
+    pip_executable: "pip-{{ python3_version }}"
     robotframework_package_version_spec: "<5"
