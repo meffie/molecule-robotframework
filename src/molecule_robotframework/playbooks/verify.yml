@@ -73,6 +73,24 @@
         - ansible_pkg_mgr in ('yum', 'dnf')
         - test_repos | count > 0
 
+    - name: Ensure git is installed (opensuse)
+      become: yes
+      zypper:
+        state: present
+        name: git
+      when:
+        - ansible_pkg_mgr == 'zypper'
+        - test_repos | count > 0
+
+    - name: Ensure git is installed (solaris)
+      become: yes
+      pkg5:
+        state: present
+        name: git
+      when:
+        - ansible_pkg_mgr == 'pkg5'
+        - test_repos | count > 0
+
     - name: Checkout Robot Framework test data repo.
       git:
         dest: "{{ test_directory }}/{{ item_repo.name }}"
