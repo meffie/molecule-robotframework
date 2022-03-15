@@ -23,9 +23,9 @@
 - name: Install python pip.
   include_tasks: "{{ item }}"
   with_first_found:
-    - "{{ role_path }}/tasks/pip/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
-    - "{{ role_path }}/tasks/pip/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
-    - "{{ role_path }}/tasks/pip/{{ ansible_distribution }}.yml"
+    - "{{ role_path }}/tasks/pip/{{ ansible_distribution | replace(' ', '_') }}-{{ ansible_distribution_version }}.yml"
+    - "{{ role_path }}/tasks/pip/{{ ansible_distribution | replace(' ', '_') }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ role_path }}/tasks/pip/{{ ansible_distribution | replace(' ', '_') }}.yml"
     - "{{ role_path }}/tasks/pip/{{ ansible_os_family }}.yml"
     - "{{ role_path }}/tasks/pip/unknown.yml"
   when: _robotframework_install
