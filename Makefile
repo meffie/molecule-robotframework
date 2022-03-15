@@ -2,7 +2,7 @@
 
 .PHONY: help init lint import test docs sdist wheel rpm deb upload clean distclean
 
-ROLE_VERSION=1.6.0
+ROLE_VERSION=1.7.0
 ROLE_REPO=https://github.com/meffie/ansible-role-robotframework.git
 PYTHON3=python3
 BIN=.venv/bin
