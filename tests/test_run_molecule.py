@@ -40,7 +40,7 @@ def test_molecule_init():
     """Verify that init scenario works."""
     with TemporaryDirectory() as tmpdir:
         with chdir(tmpdir):
-            cmd = ['molecule', 'init', 'role', 'test-init', '--verifier-name', 'robotframework']
+            cmd = ['molecule', 'init', 'role', 'acme.myrole', '--verifier-name', 'robotframework']
             proc = subprocess.Popen(cmd)
             rc = proc.wait()
             assert rc == 0
