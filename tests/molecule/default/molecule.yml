@@ -1,8 +1,7 @@
 ---
+# Note: Driver options must be set in .config/molecule/config.yml
 dependency:
   name: galaxy
-driver:
-  name: virtup
 platforms:
   - name: instance01
     template: "${IMAGE:-generic/debian10}"

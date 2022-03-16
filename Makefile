@@ -39,7 +39,12 @@ help:
 	$(PIP) install molecule[ansible] molecule-docker molecule-vagrant molecule-virtup python-vagrant
 	$(PIP) install -e .
 
-init: .venv
+.config/molecule/config.yml:
+	mkdir -p .config/molecule
+	echo "driver:" > .config/molecule/config.yml
+	echo "  name: vagrant" >> .config/molecule/config.yml
+
+init: .venv .config/molecule/config.yml
 
 lint: init
 	$(PYFLAKES) src/*/*.py
@@ -88,3 +93,4 @@ clean:
 
 distclean: clean
 	rm -rf .venv
+	rm -rf .config
