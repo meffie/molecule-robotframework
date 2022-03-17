@@ -11,7 +11,12 @@
   pkg5:
      state: present
      name: pip-{{ python3_version | replace('.','') }}
-- name: Set package versions and pip executable.
+
+- name: Set pip executable.
   set_fact:
     pip_executable: "pip-{{ python3_version }}"
+
+- name: Set robotframework package version
+  set_fact:
     robotframework_package_version_spec: "<5"
+  when: python3_version | replace('.','') < '36'
