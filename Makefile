@@ -30,21 +30,20 @@ help:
 	@echo "  clean      remove generated files"
 	@echo "  distclean  remove generated files and virtual env"
 
-.venv:
+.venv/bin/activate: requirements.txt Makefile
 	$(PYTHON3) -m venv .venv
-	$(PIP) install -U pip
-	$(PIP) install wheel
-	$(PIP) install pyflakes pylint yamllint pytest collective.checkdocs twine
-	$(PIP) install sphinx sphinx-rtd-theme
-	$(PIP) install molecule[ansible] molecule-docker molecule-vagrant molecule-virtup python-vagrant
+	$(PIP) install -U pip wheel
+	$(PIP) install -r requirements.txt
 	$(PIP) install -e .
+	touch .venv/bin/activate
 
-.config/molecule/config.yml:
+.config/molecule/config.yml: Makefile
 	mkdir -p .config/molecule
-	echo "driver:" > .config/molecule/config.yml
-	echo "  name: vagrant" >> .config/molecule/config.yml
+	@echo "---" > .config/molecule/config.yml
+	@echo "driver:" >> .config/molecule/config.yml
+	@echo "  name: vagrant" >> .config/molecule/config.yml
 
-init: .venv .config/molecule/config.yml
+init: .venv/bin/activate .config/molecule/config.yml
 
 lint: init
 	$(PYFLAKES) src/*/*.py
