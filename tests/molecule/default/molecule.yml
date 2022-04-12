@@ -4,11 +4,13 @@ dependency:
   name: galaxy
 platforms:
   - name: instance01
-    template: "${IMAGE:-generic/debian10}"
+    box: "${IMAGE:-generic/debian11}"
+    template_name: "${TEMPLATE:-debian11}"
     groups:
       - testers
   - name: instance02
-    template: "${IMAGE:-generic/debian10}"
+    box: "${IMAGE:-generic/debian11}"
+    template_name: "${TEMPLATE:-debian11}"
     groups:
       - not_testers
 provisioner:

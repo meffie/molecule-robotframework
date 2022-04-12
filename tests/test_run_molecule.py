@@ -65,6 +65,7 @@ def test_molecule_scenario(platform):
             if platform in ('debian9'):
                 os.environ['ANSIBLE_PYTHON_INTERPRETER'] = '/usr/bin/python3'
             os.environ['IMAGE'] = image
+            os.environ['TEMPLATE'] = platform
             print('\nLogging to "%s".' % logfile)
             proc = subprocess.Popen(cmd, stdout=f.fileno(), stderr=subprocess.STDOUT)
             rc = proc.wait()
