@@ -10,7 +10,7 @@ platforms = [
     'alma8',
     'rocky8',
     'centos7',
-    'fedora33',
+    'fedora34',
     'fedora35',
     'debian11',
     'debian10',
