@@ -1,5 +1,6 @@
 import os
 import subprocess
+import glob
 from pathlib import Path
 from contextlib import contextmanager
 from tempfile import TemporaryDirectory
@@ -35,6 +36,19 @@ def chdir(path):
         yield
     finally:
         os.chdir(prev)
+
+def detect_scenarios():
+    """
+    Find non-default scenario names.
+    """
+    scenarios = []
+    testdir = Path(__file__).resolve().parent
+    with chdir(testdir):
+        for path in glob.glob('molecule/*/molecule.yml'):
+            s = path.split('/')[1]
+            if s != 'default':
+                scenarios.append(s)
+    return scenarios
 
 def test_molecule_init():
     """Verify that init scenario works."""
@@ -74,5 +88,6 @@ def molecule_scenario(platform, scenario):
 def test_platform(platform):
     molecule_scenario(platform, 'default')
 
-def test_multiple_testers():
-    molecule_scenario('debian11', 'multiple-testers')
+@pytest.mark.parametrize('scenario', detect_scenarios())
+def test_scenario(scenario):
+    molecule_scenario('debian11', scenario)
