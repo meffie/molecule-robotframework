@@ -55,41 +55,10 @@
     #------------------------------------------------------------------
     # Checkout test data from git repos.
     #
-    - name: Ensure git is installed (debian)
-      become: yes
-      apt:
-        state: present
+    - name: "Ensure git is installed."
+      import_role:
         name: git
-      when:
-        - ansible_pkg_mgr == 'apt'
-        - test_repos | count > 0
-
-    - name: Ensure git is installed (redhat)
-      become: yes
-      yum:
-        state: present
-        name: git
-      when:
-        - ansible_pkg_mgr in ('yum', 'dnf')
-        - test_repos | count > 0
-
-    - name: Ensure git is installed (opensuse)
-      become: yes
-      zypper:
-        state: present
-        name: git
-      when:
-        - ansible_pkg_mgr == 'zypper'
-        - test_repos | count > 0
-
-    - name: Ensure git is installed (solaris)
-      become: yes
-      pkg5:
-        state: present
-        name: git
-      when:
-        - ansible_pkg_mgr == 'pkg5'
-        - test_repos | count > 0
+      when: test_repos | count > 0
 
     - name: Checkout Robot Framework test data repo.
       git:

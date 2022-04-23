@@ -1,0 +1,6 @@
+---
+- name: Ensure git is installed
+  become: yes
+  pkg5:
+    state: present
+    name: git

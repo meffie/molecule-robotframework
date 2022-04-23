@@ -1,0 +1,4 @@
+---
+- name: Ensure git is installed
+  debug:
+    msg: "Skipping git installation; unknown package manager {{ ansible_pkg_mgr }}"

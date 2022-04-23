@@ -1,0 +1,6 @@
+---
+- name: Ensure git is installed
+  become: yes
+  zypper:
+    state: present
+    name: git

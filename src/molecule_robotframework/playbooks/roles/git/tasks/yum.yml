@@ -1,0 +1,6 @@
+---
+- name: Ensure git is installed
+  become: yes
+  yum:
+    state: present
+    name: git
