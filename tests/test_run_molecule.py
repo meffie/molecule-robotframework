@@ -45,19 +45,18 @@ def test_molecule_init():
             rc = proc.wait()
             assert rc == 0
 
-@pytest.mark.parametrize('platform', platforms)
-def test_molecule_scenario(platform):
+def molecule_scenario(platform, scenario):
     """
     Verify molecule test on platform.
     """
     image = 'generic/%s' % platform
-    logfile = logdir / (platform + '.log')
+    logfile = logdir / ('%s-%s.log' % (platform, scenario))
     if not os.path.exists(logdir):
         os.makedirs(logdir)
     with open(logfile, 'w') as f:
         testdir = Path(__file__).resolve().parent
         with chdir(testdir):
-            cmd = ['molecule', 'test']
+            cmd = ['molecule', 'test', '--scenario-name', scenario]
             if driver:
                 cmd.append('--driver-name=%s' % driver)
             for n, v in ansible_vars.items():
@@ -70,3 +69,10 @@ def test_molecule_scenario(platform):
             proc = subprocess.Popen(cmd, stdout=f.fileno(), stderr=subprocess.STDOUT)
             rc = proc.wait()
         assert rc == 0, 'See "%s".' % logfile
+
+@pytest.mark.parametrize('platform', platforms)
+def test_platform(platform):
+    molecule_scenario(platform, 'default')
+
+def test_multiple_testers():
+    molecule_scenario('debian11', 'multiple-testers')

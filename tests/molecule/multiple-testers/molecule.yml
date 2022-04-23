@@ -8,6 +8,11 @@ platforms:
     template_name: "${TEMPLATE:-debian11}"
     groups:
       - testers
+  - name: instance02
+    box: "${IMAGE:-generic/debian11}"
+    template_name: "${TEMPLATE:-debian11}"
+    groups:
+      - testers
 provisioner:
   name: ansible
   inventory:
