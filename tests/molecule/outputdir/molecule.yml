@@ -1,0 +1,33 @@
+---
+# Note: Driver options must be set in .config/molecule/config.yml
+dependency:
+  name: galaxy
+platforms:
+  - name: instance01
+    box: "${IMAGE:-generic/debian11}"
+    template_name: "${TEMPLATE:-debian11}"
+    groups:
+      - testers
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        example: hello world
+verifier:
+  name: robotframework
+  group: testers
+  libraries:
+    - robotframework-openafslibrary
+  resource_directory: "."
+  resources:
+    - ${MOLECULE_SCENARIO_DIRECTORY}/templates/myvars.py.j2
+  test_data:
+    - ${MOLECULE_PROJECT_DIRECTORY}/robot/
+  data_sources:
+    - example.robot
+  options:
+    outputdir: my-output-dir
+    exitonerror: yes
+    exclude: bogus
+    report: index.html

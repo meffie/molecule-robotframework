@@ -2,12 +2,12 @@
 - name: Fetch Results
   hosts: "{{ molecule_robotframework_hosts | d('all') }}"
   vars:
-    output_dir: "{{ molecule_yml.verifer.output_dir | d('.') }}"
-    dest_dir: "{{ molecule_yml.verifier.dest_dir | d(molecule_scenario_directory+'/output') }}"
-    output_file: "{{ molecule_yml.verifier.get('options', {}).get('output', 'output.xml') }}"
-    log_file: "{{ molecule_yml.verifier.get('options', {}).get('log', 'log.html') }}"
-    report_file: "{{ molecule_yml.verifier.get('options', {}).get('report', 'report.html') }}"
-    debug_file: "{{ molecule_yml.verifier.get('options', {}).get('debugfile', 'debug.log') }}"
+    dest_dir:    "{{ molecule_yml.verifier.dest_dir | d(molecule_scenario_directory+'/output') }}"
+    outputdir:   "{{ molecule_yml.verifier.options.outputdir | d('.') }}"
+    output_file: "{{ molecule_yml.verifier.options.output | d('output.xml') }}"
+    log_file:    "{{ molecule_yml.verifier.options.log | d('log.html') }}"
+    report_file: "{{ molecule_yml.verifier.options.report | d('report.html') }}"
+    debug_file:  "{{ molecule_yml.verifier.options.debugfile | d('debug.log') }}"
   tasks:
     - name: Ensure debug file is present.
       copy:
@@ -18,12 +18,12 @@
     - name: Download test reports and logs.
       fetch:
         flat: "{{ (ansible_play_hosts | count == 1) | ternary('yes', 'no') }}"
-        src: "{{ output_dir }}/{{ item }}"
+        src: "{{ item }}"
         dest: "{{ dest_dir }}/"
       with_items:
-        - "{{ output_file }}"
-        - "{{ log_file }}"
-        - "{{ report_file }}"
+        - "{{ outputdir }}/{{ output_file }}"
+        - "{{ outputdir }}/{{ log_file }}"
+        - "{{ outputdir }}/{{ report_file }}"
         - "{{ debug_file }}"
       register: fetch_results
 
