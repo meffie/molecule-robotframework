@@ -26,8 +26,11 @@ verifier:
     - name: molecule-robotframework
       repo: https://github.com/meffie/molecule-robotframework
       version: main
+  test_data:
+    - ${MOLECULE_PROJECT_DIRECTORY}/robot/
   data_sources:
     - molecule-robotframework/tests/robot
+    - example.robot
   options:
     name: example
     exitonerror: yes
