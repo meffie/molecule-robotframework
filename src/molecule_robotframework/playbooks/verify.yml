@@ -19,24 +19,6 @@
         robotframework_package_version_spec: "{{ molecule_yml.verifier.package_version_spec | d('') }}"
         robotframework_external_libraries: "{{ molecule_yml.verifier.libraries | d([]) }}"
 
-    - name: Ensure Robot Framework test and resource directories exist.
-      file:
-        state: directory
-        path: "{{ item }}"
-        mode: "755"
-      with_items:
-        - "{{ test_directory }}"
-        - "{{ resource_directory }}"
-
-    #------------------------------------------------------------------
-    # Copy variables files and robot arguments from the controller.
-    #
-    - name: Copy Robot Framework resources.
-      template:
-        src: "{{ item }}"
-        dest: "{{ resource_directory }}/{{ item | basename | replace('.j2', '') }}"
-      with_items: "{{ resources }}"
-
     - name: Copy Robot Framework argument file.
       copy:
         src: "{{ molecule_ephemeral_directory }}/robotrc"
@@ -44,8 +26,29 @@
         mode: "644"
 
     #------------------------------------------------------------------
+    # Copy variables files from the controller.
+    #
+    - name: Ensure Robot Framework resource directory exists.
+      file:
+        state: directory
+        path: "{{ resource_directory }}"
+        mode: "755"
+
+    - name: Copy Robot Framework resources.
+      template:
+        src: "{{ item }}"
+        dest: "{{ resource_directory }}/{{ item | basename | replace('.j2', '') }}"
+      with_items: "{{ resources }}"
+
+    #------------------------------------------------------------------
     # Copy test data from controller
     #
+    - name: Ensure Robot Framework test directory exists.
+      file:
+        state: directory
+        path: "{{ test_directory }}"
+        mode: "755"
+
     - name: Copy Robot Framework test data files.
       copy:
         src: "{{ item }}"
