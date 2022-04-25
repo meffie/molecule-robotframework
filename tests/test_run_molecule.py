@@ -49,7 +49,7 @@ def detect_scenarios():
             s = path.split('/')[1]
             if s != 'default':
                 scenarios.append(s)
-    return scenarios
+    return sorted(scenarios)
 
 def test_molecule_init():
     """Verify that init scenario works."""
@@ -85,7 +85,7 @@ def molecule_scenario(platform, scenario):
             rc = proc.wait()
         assert rc == 0, 'See "%s".' % logfile
 
-@pytest.mark.parametrize('platform', platforms)
+@pytest.mark.parametrize('platform', sorted(platforms))
 def test_platform(platform):
     molecule_scenario(platform, 'default')
 
