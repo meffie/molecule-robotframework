@@ -15,6 +15,7 @@ platforms = [
     'fedora35',
     'debian11',
     'debian10',
+    'solaris114',
 ]
 
 logdir = Path('/tmp/molecule-robotframework')
