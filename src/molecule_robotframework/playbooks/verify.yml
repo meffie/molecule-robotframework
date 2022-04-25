@@ -19,6 +19,17 @@
         dest: "robotrc"
         mode: "644"
 
+    #------------------------------------------------------------------
+    # Install test cases.
+    #
+    - include_tasks: "tasks/test_source/{{ item.type | d('dir') }}.yml"
+      vars:
+        test_source: "{{ item }}"
+      with_items: "{{ molecule_yml.verifier.tests | d([]) }}"
+
+    #------------------------------------------------------------------
+    # Support deprecated keywords.
+    #
     - include_tasks: tasks/compat/resources.yml
       when:
         - molecule_yml.verifier.resources is defined

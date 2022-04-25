@@ -1,0 +1,11 @@
+---
+- name: "Create Robot Framework test directory."
+  file:
+    state: directory
+    path: "{{ test_source.name | d('tests') }}"
+    mode: "755"
+
+- name: "Copy Robot Framework test files."
+  copy:
+    src: "{{ test_source.source }}"
+    dest: "{{ test_source.name | d('tests') }}/"

@@ -1,0 +1,16 @@
+---
+- name: "Ensure git is installed."
+  import_role:
+    name: git
+
+- name: "Create Robot Framework test directory."
+  file:
+    state: directory
+    path: "{{ test_source.name | d('tests') }}"
+    mode: "755"
+
+- name: "Checkout Robot Framework test files."
+  git:
+    repo: "{{ test_source.source }}"
+    version: "{{ test_source.version | d('master') }}"
+    dest: "{{ test_source.name | d('tests') }}"

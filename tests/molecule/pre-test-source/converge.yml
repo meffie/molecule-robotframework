@@ -1,0 +1,14 @@
+---
+- name: Converge
+  gather_facts: no
+  hosts: all
+  tasks:
+  - name: Create tests directory
+    file:
+      state: directory
+      path: pre-loaded-tests
+
+  - name: Copy robot files
+    copy:
+      src: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/robot/"
+      dest: pre-loaded-tests

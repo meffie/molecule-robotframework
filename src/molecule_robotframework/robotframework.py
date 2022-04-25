@@ -104,16 +104,6 @@ class Robotframework(Verifier):
             exitonerror: yes
             include: mytag
 
-    The data sources arguments to ``robot`` can be passed through the ``data_sources``
-    list. The default data_sources is 'tests'.
-
-    .. code-block:: yaml
-
-        verifier:
-          name: robotframework
-          data_sources:
-            - test/example.robot
-
     Environment variables can be passed to the verifier.
 
     .. code-block:: yaml
@@ -123,29 +113,41 @@ class Robotframework(Verifier):
           env:
             ROBOT_SYSLOG_FILE: /tmp/syslog.txt
 
-    Paths to the test data sources to be copied to the test instance(s)
+    Paths to the test sources to be copied to the test instance(s).
     Provide a list of fully qualified paths to directories on the
-    controller. The default is an empty list.  An external ``verify.yml``
-    playbook can be provided if you want to copy your tests from another
-    source, such as a git checkout.
+    controller.
 
     .. code-block:: yaml
 
         verifier:
           name: robotframework
-          test_data:
-            - /path/to/my/tests/on/the/controller
-            - /path/to/more/tests/on/the/controller
+          tests:
+            - name: uploaded-from-directory
+              type: dir
+              source: /path/to/my/tests/on/the/controller
+            - name: downloaded-from-git-repo
+              type: git
+              source: "https://gitrepo-url"
+              version: branch-name
 
-    The destination path to install ``test_data`` files on the
-    test instance(s). This directory will be created on the instance
+    The test source 'name' specifies the destination path to install files
+    on the test instance(s). The directory will be created on the instance
     if it does not already exist.
 
+    The test paths to be based to robot can be set with the execute keyword.
+    This can be a single string or list of strings.
+
     .. code-block:: yaml
 
         verifier:
           name: robotframework
-          test_dest: /path/to/install/test_files/on/instance
+          tests:
+            - name: mytests
+              source: /path/to/my/tests/on/the/controller
+              execute:
+                - first.robot
+                - more/second.robot
+                - yet-more-tests
 
     External Robot Framework libraries to install on the test instances
     with pip.
@@ -221,7 +223,23 @@ class Robotframework(Verifier):
 
     @property
     def data_sources(self):
-        return self._config.config['verifier'].get('data_sources', ['tests'])
+        data_sources = []
+        verifier = self._config.config['verifier']
+        if 'tests' in verifier:
+            for test in verifier['tests']:
+                name = test.get('name', 'tests')
+                execute = test.get('execute', [''])
+                if not isinstance(execute, list):
+                    execute = [execute]
+                for e in execute:
+                    ds = os.path.join(name, e)
+                    if ds not in data_sources:
+                        data_sources.append(ds)
+        else:
+            # For compatibility with old versions.
+            data_sources = verifier.get('data_sources', ['tests'])
+        LOG.debug("data_sources=%s", data_sources)
+        return data_sources
 
     @property
     def test_hosts(self):

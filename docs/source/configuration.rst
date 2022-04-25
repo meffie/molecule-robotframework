@@ -3,6 +3,9 @@ Configuration
 
 Robot Framework verifier keywords.
 
+Verifier
+~~~~~~~~
+
 name
   Verifier name: ``robotframework``
   Required: yes
@@ -34,35 +37,58 @@ libraries
 
   Default: (empty list)
 
-test_directory
-  Test destination path.
+tests
+  List of dictionaries to specify the Robot Framework test sources to be
+  installed and executed. See Test Sources for keys.
 
-  Default: "." (current directory)
+  Default: (empty list)
 
 resource_directory
   Resource destination path.
 
   Default: "." (current directory)
 
-test_data
-  List of paths on the controller to Robot Framework test data directories (test suites).
-  These files are copied to the ``test_directory``.
-
-  Default: empty list
-
-test_repos
-  A list of dictionaries which describe git repositories of Robot Framework test data (test suites)
-  to be installed on the test instances. Each item should have a ``name``, ``repo`` URI, and optional
-  ``version`` (branch name or tag).
-
 resources
   A list of jinja2 templates on the controller to be rendered to the ``resource_directory`` on the
   instances.
 
-  Default: empty list
+  Default: (empty list)
 
 options
   The ``robot`` options as a dictionary. See the ``robot`` command for available options.
 
-data_sources
-  The ``robot`` data sources as a list of paths to tests and/or test suite directories.
+
+Test Sources
+~~~~~~~~~~~~
+
+name
+  Destination directory on the instance.
+
+  Default: 'tests'
+
+type
+  The test source type. Valid values are:
+
+  * ``dir`` - copy the tests from the controller to the test instance
+  * ``git`` - checkout the tests from a git repo
+  * ``pre`` - run pre-loaded tests
+
+  Default: ``dir``
+
+source
+  When type is ``dir``, the path to the tests on the controller.  When type is
+  ``git``, the URL of the git repository to be checked out on the test instance.
+
+version
+  When the type is ``git``, the branch or tag name to be checked out.
+
+  Default: 'master'
+
+execute
+  The files or directories to be be executed by robot.  The value of execute
+  may be a single string or a list of strings.
+
+  The destination directory specified by the ``name`` key is automatically
+  prepended to each element.
+
+  Default: 'tests'

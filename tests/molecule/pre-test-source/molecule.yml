@@ -19,19 +19,12 @@ verifier:
   group: testers
   libraries:
     - robotframework-openafslibrary
-  resource_directory: "."
   resources:
     - ${MOLECULE_SCENARIO_DIRECTORY}/templates/myvars.py.j2
-  test_repos:
-    - name: molecule-robotframework
-      repo: https://github.com/meffie/molecule-robotframework
-      version: main
-  test_data:
-    - ${MOLECULE_PROJECT_DIRECTORY}/robot/
-  test_directory: mytests
-  data_sources:
-    - mytests/molecule-robotframework/tests/robot
-    - mytests/example.robot
+  tests:
+    - name: pre-loaded-tests
+      type: pre
+      execute: example.robot
   options:
     name: example
     exitonerror: yes

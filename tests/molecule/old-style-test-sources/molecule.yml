@@ -24,7 +24,7 @@ verifier:
     - ${MOLECULE_SCENARIO_DIRECTORY}/templates/myvars.py.j2
   test_repos:
     - name: molecule-robotframework
-      repo: https://github.com/meffie/molecule-robotframework
+      repo: "https://github.com/meffie/molecule-robotframework"
       version: main
   test_data:
     - ${MOLECULE_PROJECT_DIRECTORY}/robot/

@@ -1,0 +1,3 @@
+---
+- debug:
+    msg: "Using pre-loaded Robot Framework tests; {{ test_source.name | d('tests') }}"

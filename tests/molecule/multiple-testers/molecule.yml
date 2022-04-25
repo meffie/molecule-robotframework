@@ -24,15 +24,11 @@ verifier:
   group: testers
   libraries:
     - robotframework-openafslibrary
-  test_directory: "."
-  resource_directory: "."
-  test_data:
-    - ${MOLECULE_PROJECT_DIRECTORY}/robot/
+  tests:
+    - source: ${MOLECULE_PROJECT_DIRECTORY}/robot/
   resources:
     - ${MOLECULE_SCENARIO_DIRECTORY}/templates/myvars.py.j2
   options:
     exitonerror: yes
     exclude: bogus
     report: index.html
-  data_sources:
-    - example.robot

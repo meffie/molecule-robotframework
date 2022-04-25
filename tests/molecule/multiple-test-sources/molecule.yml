@@ -22,15 +22,15 @@ verifier:
   resource_directory: "."
   resources:
     - ${MOLECULE_SCENARIO_DIRECTORY}/templates/myvars.py.j2
-  test_repos:
+  tests:
     - name: molecule-robotframework
-      repo: https://github.com/meffie/molecule-robotframework
+      type: git
+      source: "https://github.com/meffie/molecule-robotframework"
       version: main
-  test_data:
-    - ${MOLECULE_PROJECT_DIRECTORY}/robot/
-  data_sources:
-    - molecule-robotframework/tests/robot
-    - example.robot
+      execute: tests/robot/example.robot
+    - name: my-tests
+      type: dir
+      source: ${MOLECULE_PROJECT_DIRECTORY}/robot/
   options:
     name: example
     exitonerror: yes
