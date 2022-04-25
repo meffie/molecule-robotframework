@@ -1,12 +1,6 @@
 ---
 - name: Verify
   hosts: "{{ molecule_robotframework_hosts | d('all') }}"
-  vars:
-    test_directory: "{{ molecule_yml.verifier.test_directory | d('.') }}"
-    resource_directory: "{{ molecule_yml.verifier.resource_directory | d('.') }}"
-    resources: "{{ molecule_yml.verifier.resources | d([]) }}"
-    test_data: "{{ molecule_yml.verifier.test_data | d([]) }}"
-    test_repos: "{{ molecule_yml.verifier.test_repos | d([]) }}"
   tasks:
     #------------------------------------------------------------------
     # Install Robot Framework.
@@ -25,50 +19,11 @@
         dest: "robotrc"
         mode: "644"
 
-    #------------------------------------------------------------------
-    # Copy variables files from the controller.
-    #
-    - name: Ensure Robot Framework resource directory exists.
-      file:
-        state: directory
-        path: "{{ resource_directory }}"
-        mode: "755"
+    - include_tasks: tasks/compat/resources.yml
+      when:
+        - molecule_yml.verifier.resources is defined
 
-    - name: Copy Robot Framework resources.
-      template:
-        src: "{{ item }}"
-        dest: "{{ resource_directory }}/{{ item | basename | replace('.j2', '') }}"
-      with_items: "{{ resources }}"
-
-    #------------------------------------------------------------------
-    # Copy test data from controller
-    #
-    - name: Ensure Robot Framework test directory exists.
-      file:
-        state: directory
-        path: "{{ test_directory }}"
-        mode: "755"
-
-    - name: Copy Robot Framework test data files.
-      copy:
-        src: "{{ item }}"
-        dest: "{{ test_directory }}/"
-      with_items: "{{ test_data }}"
-
-    #------------------------------------------------------------------
-    # Checkout test data from git repos.
-    #
-    - name: "Ensure git is installed."
-      import_role:
-        name: git
-      when: test_repos | count > 0
-
-    - name: Checkout Robot Framework test data repo.
-      git:
-        dest: "{{ test_directory }}/{{ item_repo.name }}"
-        repo: "{{ item_repo.repo }}"
-        version: "{{ item_repo.version | d('master') }}"
-      register: git_results
-      loop: "{{ test_repos }}"
-      loop_control:
-        loop_var: item_repo
+    - include_tasks: tasks/compat/test_sources.yml
+      when: >
+        molecule_yml.verifier.test_data is defined or
+        molecule_yml.verifier.test_repos is defined

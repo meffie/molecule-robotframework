@@ -1,0 +1,39 @@
+---
+- name: Test sources (old-style)
+  vars:
+    test_directory: "{{ molecule_yml.verifier.test_directory | d('.') }}"
+    test_data: "{{ molecule_yml.verifier.test_data | d([]) }}"
+    test_repos: "{{ molecule_yml.verifier.test_repos | d([]) }}"
+  block:
+    #------------------------------------------------------------------
+    # Copy test data from controller
+    #
+    - name: Ensure Robot Framework test directory exists.
+      file:
+        state: directory
+        path: "{{ test_directory }}"
+        mode: "755"
+
+    - name: Copy Robot Framework test data files.
+      copy:
+        src: "{{ item }}"
+        dest: "{{ test_directory }}/"
+      with_items: "{{ test_data }}"
+
+    #------------------------------------------------------------------
+    # Checkout test data from git repos.
+    #
+    - name: "Ensure git is installed."
+      import_role:
+        name: git
+      when: test_repos | count > 0
+
+    - name: Checkout Robot Framework test data repo.
+      git:
+        dest: "{{ test_directory }}/{{ item_repo.name }}"
+        repo: "{{ item_repo.repo }}"
+        version: "{{ item_repo.version | d('master') }}"
+      register: git_results
+      loop: "{{ test_repos }}"
+      loop_control:
+        loop_var: item_repo

@@ -1,0 +1,20 @@
+---
+- name: Resources (old-style)
+  vars:
+    resource_directory: "{{ molecule_yml.verifier.resource_directory | d('.') }}"
+    resources: "{{ molecule_yml.verifier.resources | d([]) }}"
+  block:
+    #------------------------------------------------------------------
+    # Copy variables files from the controller.
+    #
+    - name: Ensure Robot Framework resource directory exists.
+      file:
+        state: directory
+        path: "{{ resource_directory }}"
+        mode: "755"
+
+    - name: Copy Robot Framework resources.
+      template:
+        src: "{{ item }}"
+        dest: "{{ resource_directory }}/{{ item | basename | replace('.j2', '') }}"
+      with_items: "{{ resources }}"
