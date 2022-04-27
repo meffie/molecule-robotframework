@@ -2,10 +2,8 @@
 - name: Verify
   hosts: "{{ molecule_robotframework_hosts | d('all') }}"
   tasks:
-    #------------------------------------------------------------------
-    # Install Robot Framework.
-    #
-    - import_role:
+    - name: "Install Robot Framework."
+      import_role:
         name: robotframework
       vars:
         robotframework_install: "{{ molecule_yml.verifier.install | d('auto') }}"
@@ -13,28 +11,25 @@
         robotframework_package_version_spec: "{{ molecule_yml.verifier.package_version_spec | d('') }}"
         robotframework_external_libraries: "{{ molecule_yml.verifier.libraries | d([]) }}"
 
-    - name: Copy Robot Framework argument file.
+    - name: "Copy Robot Framework argument file."
       copy:
         src: "{{ molecule_ephemeral_directory }}/robotrc"
         dest: "robotrc"
         mode: "644"
 
-    #------------------------------------------------------------------
-    # Install test cases.
-    #
-    - include_tasks: "tasks/test_source/{{ item.type | d('dir') }}.yml"
+    - name: "Install tests."
+      include_tasks: "tasks/test_source/{{ item.type | d('dir') }}.yml"
       vars:
         test_source: "{{ item }}"
       with_items: "{{ molecule_yml.verifier.tests | d([]) }}"
 
-    #------------------------------------------------------------------
-    # Support deprecated keywords.
-    #
-    - include_tasks: tasks/compat/resources.yml
+    - name: "Old-style resources keyword."
+      include_tasks: tasks/compat/resources.yml
       when:
         - molecule_yml.verifier.resources is defined
 
-    - include_tasks: tasks/compat/test_sources.yml
+    - name: "Old-style task sources keywords."
+      include_tasks: tasks/compat/test_sources.yml
       when: >
         molecule_yml.verifier.test_data is defined or
         molecule_yml.verifier.test_repos is defined
