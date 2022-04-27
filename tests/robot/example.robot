@@ -1,6 +1,7 @@
 | *** Settings ***   |
 | Documentation      | Example using the pipe separated format.
 | Library            | OperatingSystem
+| Resource           | example.resource
 
 | *** Variables ***  |
 | ${MESSAGE}         | Hello, world!
@@ -10,7 +11,3 @@
 |                    | Log             | ${MESSAGE}    |
 |                    | My Keyword      | ${CURDIR}     |
 | Another Test       | Should Be Equal | ${MESSAGE}    | Hello, world!
-
-| *** Keywords ***   |                        |         |
-| My Keyword         | [Arguments]            | ${path} |
-|                    | Directory Should Exist | ${path} |
