@@ -10,17 +10,9 @@ platforms:
       - testers
 provisioner:
   name: ansible
-  inventory:
-    group_vars:
-      all:
-        example: hello world
 verifier:
   name: robotframework
   group: testers
-  libraries:
-    - robotframework-openafslibrary
-  resources:
-    - ${MOLECULE_SCENARIO_DIRECTORY}/templates/myvars.py.j2
   tests:
     - source: ${MOLECULE_PROJECT_DIRECTORY}/robot/
   options:

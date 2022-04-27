@@ -36,3 +36,4 @@ verifier:
     exitonerror: yes
     exclude: bogus
     report: index.html
+    variablefile: myvars.py
