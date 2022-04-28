@@ -21,7 +21,7 @@ verifier:
       execute: tests/robot/example.robot
     - name: my-tests
       type: dir
-      source: ${MOLECULE_PROJECT_DIRECTORY}/robot/
+      source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
   options:
     name: example
     exitonerror: yes

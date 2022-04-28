@@ -27,7 +27,7 @@ verifier:
       repo: "https://github.com/meffie/molecule-robotframework"
       version: main
   test_data:
-    - ${MOLECULE_PROJECT_DIRECTORY}/robot/
+    - ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
   test_directory: mytests
   data_sources:
     - mytests/molecule-robotframework/tests/robot

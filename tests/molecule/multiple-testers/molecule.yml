@@ -19,7 +19,7 @@ verifier:
   name: robotframework
   group: testers
   tests:
-    - source: ${MOLECULE_PROJECT_DIRECTORY}/robot/
+    - source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
   options:
     exitonerror: yes
     exclude: bogus
