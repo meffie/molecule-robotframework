@@ -1,0 +1,19 @@
+---
+- name: "Create Robot Framework resource directory."
+  file:
+    state: directory
+    path: "{{ resource.directory }}"
+    mode: "755"
+  when: resource.directory is defined
+
+- name: "Copy Robot Framework resource file."
+  copy:
+    src: "{{ resource.source }}"
+    dest: "{{ resource.directory | d('.') }}/"
+  when: resource.type | d('file') == 'file'
+
+- name: "Render Robot Framework resource template."
+  template:
+    src: "{{ resource.source }}"
+    dest: "{{ resource.dest | d('.') }}/{{ resource.source | basename | replace('.j2', '') }}"
+  when: resource.type | d('file') == 'template'

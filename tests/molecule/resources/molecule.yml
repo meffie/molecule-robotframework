@@ -1,0 +1,27 @@
+---
+# Note: Driver options must be set in .config/molecule/config.yml
+dependency:
+  name: galaxy
+platforms:
+  - name: instance01
+    box: "${IMAGE:-generic/debian11}"
+    template_name: "${TEMPLATE:-debian11}"
+    groups:
+      - testers
+provisioner:
+  name: ansible
+verifier:
+  name: robotframework
+  group: testers
+  resources:
+    - source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.resource
+      type: file
+      directory: tests
+  tests:
+    - name: tests
+      type: dir
+      source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
+  options:
+    exitonerror: yes
+    exclude: bogus
+    report: index.html

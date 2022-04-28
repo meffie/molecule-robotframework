@@ -43,14 +43,11 @@ tests
 
   Default: (empty list)
 
-resource_directory
-  Resource destination path.
-
-  Default: "." (current directory)
-
 resources
-  A list of jinja2 templates on the controller to be rendered to the ``resource_directory`` on the
-  instances.
+  List of dictionaries to specify Robot Framework resource files to be
+  installed on test instances. Resource files provide common settings and
+  keywords. Resource files are imported using the Resource setting in the
+  Settings table in your test files.  See Resources for keys.
 
   Default: (empty list)
 
@@ -92,3 +89,15 @@ execute
   prepended to each element.
 
   Default: 'tests'
+
+Resources
+~~~~~~~~~
+
+source
+  The path to the resource file or template on the controller.
+
+type
+  The source file type, ``file`` or ``template``.
+
+directory
+  The destination path on the test instances.
