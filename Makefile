@@ -82,10 +82,8 @@ upload: init sdist wheel
 	$(TWINE) upload dist/*
 
 clean:
-	rm -rf .pytest_cache
-	rm -rf src/*/__pycache__
-	rm -rf tests/__pycache__
-	rm -rf tests/scenarios/*/*/molecule/default/library/__pycache__/
+	rm -rf .pytest_cache src/*/__pycache__ tests/__pycache__
+	rm -rf tests/molecule/*/output
 	rm -rf build dist
 	rm -rf .eggs *.egg-info src/*.egg-info
 	rm -rf docs/build
