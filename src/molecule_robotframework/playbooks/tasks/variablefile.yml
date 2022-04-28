@@ -1,0 +1,12 @@
+---
+- name: "Create Robot Framework variable file directory."
+  file:
+    state: directory
+    path: "{{ variablefile.directory }}"
+    mode: "755"
+  when: variablefile.directory is defined
+
+- name: "Render Robot Framework variable file template."
+  template:
+    src: "{{ variablefile.source }}"
+    dest: "{{ variablefile.directory | d('.') }}/{{ variablefile.source | basename | replace('.j2', '') }}"

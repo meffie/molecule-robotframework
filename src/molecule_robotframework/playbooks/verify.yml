@@ -28,6 +28,12 @@
         - molecule_yml.verifier.resources | count > 0
         - molecule_yml.verifier.resources[0] is mapping
 
+    - name: "Install variable files."
+      include_tasks: "tasks/variablefile.yml"
+      vars:
+        variablefile: "{{ item }}"
+      with_items: "{{ molecule_yml.verifier.variablefiles | d([]) }}"
+
     - name: "Install tests."
       include_tasks: "tasks/test_source/{{ item.type | d('dir') }}.yml"
       vars:

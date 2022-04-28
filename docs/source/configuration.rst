@@ -51,6 +51,20 @@ resources
 
   Default: (empty list)
 
+variablefiles
+  List of dictionaries to specify Robot Framework variable file templates to be
+  rendered and installed on the test instances.  The molecule inventory variables
+  may be used to generate the variable file.  This allows test data values to be
+  customized in the molecule.yml file.
+
+  Test data files can import variable files using the Variables setting in the
+  Setting section. Another way to take variable files into use is using ``robot``
+  option ``variablefile``.
+
+  See Variablefiles for keys.
+
+  Default: (empty list)
+
 options
   The ``robot`` options as a dictionary. See the ``robot`` command for available options.
 
@@ -98,6 +112,16 @@ source
 
 type
   The source file type, ``file`` or ``template``.
+
+directory
+  The destination path on the test instances.
+
+
+Variablefiles
+~~~~~~~~~~~~~
+
+source
+  The path to the variable file template on the controller.
 
 directory
   The destination path on the test instances.

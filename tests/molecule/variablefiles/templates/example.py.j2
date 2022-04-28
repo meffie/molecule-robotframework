@@ -1,0 +1,8 @@
+# Example variable file. This template is rendered
+# with values from the inventory.
+#
+{% if example_variable is defined %}
+example_variable = "{{ example_variable }}"
+{% else %}
+# WARNING: example_variable is not defined!
+{% endif %}
