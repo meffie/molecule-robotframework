@@ -35,6 +35,14 @@ from molecule.api import Verifier
 
 LOG = logger.get_logger(__name__)
 
+def as_boolean(data):
+    if isinstance(data, bool):
+        return data
+    if hasattr(data, 'lower'):
+        return data.lower() in ('yes', 'true', '1', 1, 'on')
+    return False
+
+
 def dict2args(data):
     """Convert a dictionary of options to command like arguments.
 
@@ -228,6 +236,9 @@ class Robotframework(Verifier):
         if 'tests' in verifier:
             for test in verifier['tests']:
                 name = test.get('name', 'tests')
+                enabled = as_boolean(test.get('enabled', 'yes'))
+                if not enabled:
+                    continue
                 execute = test.get('execute', [''])
                 if not isinstance(execute, list):
                     execute = [execute]

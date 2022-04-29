@@ -77,6 +77,13 @@ name
 
   Default: 'tests'
 
+enabled
+  Specifies if this test source is to be installed and executed. This
+  option can be used to specify with tests sources are used instead of
+  removing or commenting out sections of the molecule.yml file.
+
+  Default: true
+
 type
   The test source type. Valid values are:
 

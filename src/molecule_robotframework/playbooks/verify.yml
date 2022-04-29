@@ -38,6 +38,7 @@
       include_tasks: "tasks/test_source/{{ item.type | d('dir') }}.yml"
       vars:
         test_source: "{{ item }}"
+      when: item.enabled | d(True)
       with_items: "{{ molecule_yml.verifier.tests | d([]) }}"
 
     - name: "Old-style resources keyword."
