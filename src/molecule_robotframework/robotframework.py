@@ -298,7 +298,7 @@ class Robotframework(Verifier):
             env=self.env,
         )
 
-    def execute(self):
+    def execute(self, action_args=None):
         """
         Execute the robotframework verifier.
 
