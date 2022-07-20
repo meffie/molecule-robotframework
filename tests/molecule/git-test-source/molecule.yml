@@ -18,7 +18,7 @@ verifier:
       type: git
       source: "https://github.com/meffie/molecule-robotframework"
       version: main
-      execute: tests/robot/example.robot
+      execute: tests/molecule/resources/files/example.robot
   options:
     name: example
     exitonerror: yes

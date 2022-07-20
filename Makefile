@@ -12,6 +12,7 @@ PYFLAKES=$(BIN)/pyflakes
 YAMLLINT=$(BIN)/yamllint
 PYTEST=$(BIN)/pytest
 TWINE=$(BIN)/twine
+BASH=/bin/bash
 
 help:
 	@echo "usage: make <target>"
@@ -61,7 +62,7 @@ import:
 	rm -rf /tmp/ansible-role-robotframework.git
 
 check test: init lint
-	. .venv/bin/activate && pytest -v $(T) tests
+	$(BASH) -c '. .venv/bin/activate && pytest -v $(T) tests'
 
 doc docs:
 	$(MAKE) -C docs html

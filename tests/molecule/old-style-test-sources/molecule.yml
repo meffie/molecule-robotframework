@@ -29,7 +29,7 @@ verifier:
   test_data:
     - ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
   data_sources:
-    - molecule-robotframework/tests/robot
+    - molecule-robotframework/tests/molecule/old-style-test-sources/files/example.robot
     - example.robot
   options:
     name: example

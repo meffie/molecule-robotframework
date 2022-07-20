@@ -18,7 +18,7 @@ verifier:
       type: git
       source: "https://github.com/meffie/molecule-robotframework"
       version: main
-      execute: tests/robot/example.robot
+      execute: tests/molecule/multiple-test-sources/files/example.robot
     - name: my-tests
       type: dir
       source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot

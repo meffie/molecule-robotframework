@@ -30,7 +30,7 @@ verifier:
     - ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
   test_directory: mytests
   data_sources:
-    - mytests/molecule-robotframework/tests/robot
+    - mytests/molecule-robotframework/tests/molecule/old-style-test-sources-with-test-dir/files/example.robot
     - mytests/example.robot
   options:
     name: example
