@@ -9,12 +9,13 @@ import pytest
 
 platforms = [
     'alma8',
+    'alma9',
     'rocky8',
     'centos7',
-    'fedora34',
     'fedora35',
-    'debian11',
+    'fedora36',
     'debian10',
+    'debian11',
     'solaris114',
 ]
 
