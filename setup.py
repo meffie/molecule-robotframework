@@ -28,7 +28,7 @@ setuptools.setup(
     install_requires=[
         # molecule plugins are not allowed to mention Ansible as a direct dependency
         'molecule>=3.2.0',
-        'pyyaml>=5.1,<6',
+        'pyyaml>=5.1',
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
