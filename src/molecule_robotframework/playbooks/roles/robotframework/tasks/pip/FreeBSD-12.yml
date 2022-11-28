@@ -1,0 +1,8 @@
+---
+- name: Ensure python pip is installed.
+  become: yes
+  pkgng:
+    state: present
+    name:
+      - python39
+      - py39-pip
