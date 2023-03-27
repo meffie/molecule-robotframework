@@ -13,6 +13,6 @@
 
 - name: Set package versions.
   set_fact:
-    pip_executable: "/usr/bin/pip2.7"
+    pip_executable: "/opt/rh/python27/root/usr/bin/pip2.7"
     pyyaml_version: "<6"
     robotframework_package_version_spec: "<5"
