@@ -12,12 +12,13 @@ provisioner:
   name: ansible
 verifier:
   name: robotframework
-  group: testers
-  libraries:
-    - robotframework-openafslibrary
-  tests:
-    - source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
   options:
-    exitonerror: yes
-    exclude: bogus
-    report: index.html
+    group: testers
+    libraries:
+      - robotframework-openafslibrary
+    tests:
+      - source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
+    robot:
+      exitonerror: yes
+      exclude: bogus
+      report: index.html

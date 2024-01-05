@@ -10,6 +10,17 @@ name
   Verifier name: ``robotframework``
   Required: yes
 
+enabled
+  Verifier enabled state
+  Required: no
+  Default: true
+
+options
+  Required: no
+
+options
+~~~~~~~
+
 group
   The Ansible group to run ``robot``. Set this to a group name when
   you have multiple instances in the scenario and you want to limit
@@ -65,7 +76,7 @@ variablefiles
 
   Default: (empty list)
 
-options
+robot
   The ``robot`` options as a dictionary. See the ``robot`` command for available options.
 
 

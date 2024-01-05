@@ -16,10 +16,11 @@ provisioner:
   name: ansible
 verifier:
   name: robotframework
-  group: testers
-  tests:
-    - source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
   options:
-    exitonerror: yes
-    exclude: bogus
-    report: index.html
+    group: testers
+    tests:
+      - source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
+    robot:
+      exitonerror: yes
+      exclude: bogus
+      report: index.html

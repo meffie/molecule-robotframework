@@ -12,13 +12,14 @@ provisioner:
   name: ansible
 verifier:
   name: robotframework
-  group: testers
-  tests:
-    - name: pre-loaded-tests
-      type: pre
-      execute: example.robot
   options:
-    name: example
-    exitonerror: yes
-    exclude: bogus
-    report: index.html
+    group: testers
+    tests:
+      - name: pre-loaded-tests
+        type: pre
+        execute: example.robot
+    robot:
+      name: example
+      exitonerror: yes
+      exclude: bogus
+      report: index.html

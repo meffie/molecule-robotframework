@@ -2,12 +2,12 @@
 - name: Fetch Results
   hosts: "{{ molecule_robotframework_hosts | d('all') }}"
   vars:
-    dest_dir:    "{{ molecule_yml.verifier.dest_dir | d(molecule_scenario_directory+'/output') }}"
-    outputdir:   "{{ molecule_yml.verifier.options.outputdir | d('.') }}"
-    output_file: "{{ molecule_yml.verifier.options.output | d('output.xml') }}"
-    log_file:    "{{ molecule_yml.verifier.options.log | d('log.html') }}"
-    report_file: "{{ molecule_yml.verifier.options.report | d('report.html') }}"
-    debug_file:  "{{ molecule_yml.verifier.options.debugfile | d('debug.log') }}"
+    dest_dir:    "{{ molecule_yml.verifier.options.dest_dir | d(molecule_scenario_directory+'/output') }}"
+    outputdir:   "{{ molecule_yml.verifier.options.robot.outputdir | d('.') }}"
+    output_file: "{{ molecule_yml.verifier.options.robot.output | d('output.xml') }}"
+    log_file:    "{{ molecule_yml.verifier.options.robot.log | d('log.html') }}"
+    report_file: "{{ molecule_yml.verifier.options.robot.report | d('report.html') }}"
+    debug_file:  "{{ molecule_yml.verifier.options.robot.debugfile | d('debug.log') }}"
   tasks:
     - name: Ensure debug file is present.
       copy:

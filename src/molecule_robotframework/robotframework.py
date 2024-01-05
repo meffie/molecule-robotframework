@@ -1,4 +1,4 @@
-#  Copyright (c) 2020-2021 Sine Nomine Associates
+#  Copyright (c) 2020-2023 Sine Nomine Associates
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to
@@ -108,9 +108,10 @@ class Robotframework(Verifier):
         verifier:
           name: robotframework
           options:
-            dryrun: yes
-            exitonerror: yes
-            include: mytag
+            robot:
+              dryrun: yes
+              exitonerror: yes
+              include: mytag
 
     Environment variables can be passed to the verifier.
 
@@ -129,14 +130,15 @@ class Robotframework(Verifier):
 
         verifier:
           name: robotframework
-          tests:
-            - name: uploaded-from-directory
-              type: dir
-              source: /path/to/my/tests/on/the/controller
-            - name: downloaded-from-git-repo
-              type: git
-              source: "https://gitrepo-url"
-              version: branch-name
+          options:
+            tests:
+              - name: uploaded-from-directory
+                type: dir
+                source: /path/to/my/tests/on/the/controller
+              - name: downloaded-from-git-repo
+                type: git
+                source: "https://gitrepo-url"
+                version: branch-name
 
     The test source 'name' specifies the destination path to install files
     on the test instance(s). The directory will be created on the instance
@@ -149,13 +151,14 @@ class Robotframework(Verifier):
 
         verifier:
           name: robotframework
-          tests:
-            - name: mytests
-              source: /path/to/my/tests/on/the/controller
-              execute:
-                - first.robot
-                - more/second.robot
-                - yet-more-tests
+          options:
+            tests:
+              - name: mytests
+                source: /path/to/my/tests/on/the/controller
+                execute:
+                  - first.robot
+                  - more/second.robot
+                  - yet-more-tests
 
     External Robot Framework libraries to install on the test instances
     with pip.
@@ -164,9 +167,10 @@ class Robotframework(Verifier):
 
         verifier:
           name: robotframework
-          libraries:
-            - robotframework-sshlibrary
-            - robotframework-openafslibrary
+          options:
+            libraries:
+              - robotframework-sshlibrary
+              - robotframework-openafslibrary
 
     The inventory group name of the test instances. Defaults to 'all'.
 
@@ -174,7 +178,8 @@ class Robotframework(Verifier):
 
         verifier:
           name: robotframework
-          group: testers
+          options:
+            group: testers
 
     .. _`Robotframework`: https://robotframework.org
     """
@@ -214,7 +219,7 @@ class Robotframework(Verifier):
             playbook = self._get_bundled_playbook(name)
         pb = ansible_playbook.AnsiblePlaybook(playbook, self._config)
         # Target just the testers (all by default.)
-        pb.add_cli_arg('extra_vars', f'molecule_robotframework_hosts={self.test_group}')
+        pb.add_cli_arg('extra_vars', f'molecule_robotframework_hosts={self.group}')
         pb.execute()
 
     @property
@@ -222,18 +227,25 @@ class Robotframework(Verifier):
         return self._config.config['provisioner']['ansible_args']
 
     @property
-    def test_group(self):
-        return self._config.config['verifier'].get('group', 'all')
+    def options(self):
+        return self._config.config['verifier'].get('options', {})
+
+    @property
+    def group(self):
+        return self.options.get('group', 'all')
 
     @property
     def robot_options(self):
-        return self._config.config['verifier'].get('options', {})
+        return self.options.get('robot', {})
+
+    @property
+    def tests(self):
+        return self.options.get('tests', {})
 
     @property
     def data_sources(self):
         data_sources = []
-        verifier = self._config.config['verifier']
-        for test in verifier['tests']:
+        for test in self.tests:
             name = test.get('name', 'tests')
             enabled = as_boolean(test.get('enabled', 'yes'))
             if not enabled:
@@ -251,7 +263,7 @@ class Robotframework(Verifier):
     @property
     def test_hosts(self):
         inventory = self._config.provisioner.inventory
-        return inventory.get(self.test_group, inventory.get('all', {})).get('hosts', {})
+        return inventory.get(self.group, inventory.get('all', {})).get('hosts', {})
 
     @property
     def argumentfile(self):

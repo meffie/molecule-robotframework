@@ -6,10 +6,10 @@
       import_role:
         name: robotframework
       vars:
-        robotframework_install: "{{ molecule_yml.verifier.install | d('auto') }}"
-        robotframework_package_name: "{{ molecule_yml.verifier.package_name | d('robotframework') }}"
-        robotframework_package_version_spec: "{{ molecule_yml.verifier.package_version_spec | d('') }}"
-        robotframework_external_libraries: "{{ molecule_yml.verifier.libraries | d([]) }}"
+        robotframework_install: "{{ molecule_yml.verifier.options.install | d('auto') }}"
+        robotframework_package_name: "{{ molecule_yml.verifier.options.package_name | d('robotframework') }}"
+        robotframework_package_version_spec: "{{ molecule_yml.verifier.options.package_version_spec | d('') }}"
+        robotframework_external_libraries: "{{ molecule_yml.verifier.options.libraries | d([]) }}"
 
     - name: "Copy Robot Framework argument file."
       copy:
@@ -21,17 +21,17 @@
       include_tasks: "tasks/resource.yml"
       vars:
         resource: "{{ item }}"
-      with_items: "{{ molecule_yml.verifier.resources }}"
+      with_items: "{{ molecule_yml.verifier.options.resources | d({}) }}"
 
     - name: "Install variable files."
       include_tasks: "tasks/variablefile.yml"
       vars:
         variablefile: "{{ item }}"
-      with_items: "{{ molecule_yml.verifier.variablefiles | d([]) }}"
+      with_items: "{{ molecule_yml.verifier.options.variablefiles | d([]) }}"
 
     - name: "Install tests."
       include_tasks: "tasks/test_source/{{ item.type | d('dir') }}.yml"
       vars:
         test_source: "{{ item }}"
       when: item.enabled | d(True)
-      with_items: "{{ molecule_yml.verifier.tests | d([]) }}"
+      with_items: "{{ molecule_yml.verifier.options.tests | d([]) }}"
