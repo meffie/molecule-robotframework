@@ -288,11 +288,7 @@ class Robotframework(Verifier):
         else:
             util.sysexit_with_message(f'Unsupported connection {ansible_connection}', 1)
 
-        self._robot_command = util.BakedCommand(
-            cmd=cmd,
-            cwd=self._config.scenario.directory,
-            env=self.env,
-        )
+        self._robot_command = cmd
 
     def execute(self, action_args=None):
         """
@@ -321,7 +317,12 @@ class Robotframework(Verifier):
         for name, host in self.test_hosts.items():
             self.bake(name, host)
             LOG.info(f'Running robotframework tests on instance {name}.')
-            result = util.run_command(self._robot_command, debug=self._config.debug)
+            result = util.run_command(
+                self._robot_command,
+                debug=self._config.debug,
+                cwd=self._config.scenario.directory,
+                env=self.env
+            )
             LOG.info(f"robot return code: {result.returncode}")
             if result.returncode == 0:
                 verified = True
