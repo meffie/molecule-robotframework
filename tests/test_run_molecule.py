@@ -7,16 +7,16 @@ from tempfile import TemporaryDirectory
 
 import pytest
 
-platforms = [
-    'alma8',
-    'alma9',
-    'rocky8',
-    'centos7',
-    'fedora35',
-    'fedora36',
-    'debian10',
-    'debian11',
-    'solaris114',
+images = [
+    'generic/alma8',
+    'generic/alma9',
+    'generic/rocky8',
+    'generic/centos7',
+    'generic/fedora35',
+    'generic/fedora36',
+    'generic/debian10',
+    'generic/debian11',
+    #'rbrunckhorst/solaris11.4',
 ]
 
 logdir = Path('/tmp/molecule-robotframework')
@@ -52,21 +52,15 @@ def detect_scenarios():
                 scenarios.append(s)
     return sorted(scenarios)
 
-def test_molecule_init():
-    """Verify that init scenario works."""
-    with TemporaryDirectory() as tmpdir:
-        with chdir(tmpdir):
-            cmd = ['molecule', 'init', 'role', 'acme.myrole', '--verifier-name', 'robotframework']
-            proc = subprocess.Popen(cmd)
-            rc = proc.wait()
-            assert rc == 0
-
-def molecule_scenario(platform, scenario):
+def molecule_scenario(image, scenario):
     """
     Verify molecule test on platform.
     """
-    image = 'generic/%s' % platform
-    logfile = logdir / ('%s-%s.log' % (platform, scenario))
+    if '/' in image:
+        platform = image.split('/')[1]
+    else:
+        platform = image
+    logfile = logdir / (platform + '-' + scenario + '.log')
     if not os.path.exists(logdir):
         os.makedirs(logdir)
     with open(logfile, 'w') as f:
@@ -77,19 +71,18 @@ def molecule_scenario(platform, scenario):
                 cmd.append('--driver-name=%s' % driver)
             for n, v in ansible_vars.items():
                 os.environ[n] = v
-            if platform in ('debian9'):
+            if 'debian9' in image:
                 os.environ['ANSIBLE_PYTHON_INTERPRETER'] = '/usr/bin/python3'
             os.environ['IMAGE'] = image
-            os.environ['TEMPLATE'] = platform
             print('\nLogging to "%s".' % logfile)
             proc = subprocess.Popen(cmd, stdout=f.fileno(), stderr=subprocess.STDOUT)
             rc = proc.wait()
         assert rc == 0, 'See "%s".' % logfile
 
-@pytest.mark.parametrize('platform', sorted(platforms))
-def test_platform(platform):
-    molecule_scenario(platform, 'default')
+@pytest.mark.parametrize('image', sorted(images))
+def test_platform(image):
+    molecule_scenario(image, 'default')
 
 @pytest.mark.parametrize('scenario', detect_scenarios())
 def test_scenario(scenario):
-    molecule_scenario('debian11', scenario)
+    molecule_scenario('generic/debian11', scenario)

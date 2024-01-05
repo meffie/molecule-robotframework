@@ -1,11 +1,11 @@
 ---
-# Note: Driver options must be set in .config/molecule/config.yml
 dependency:
   name: galaxy
+driver:
+  name: vagrant
 platforms:
   - name: instance01
     box: "${IMAGE:-generic/debian11}"
-    template_name: "${TEMPLATE:-debian11}"
     groups:
       - testers
 provisioner:

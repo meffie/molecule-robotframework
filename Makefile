@@ -38,13 +38,7 @@ help:
 	$(PIP) install -e .
 	touch .venv/bin/activate
 
-.config/molecule/config.yml: Makefile
-	mkdir -p .config/molecule
-	@echo "---" > .config/molecule/config.yml
-	@echo "driver:" >> .config/molecule/config.yml
-	@echo "  name: vagrant" >> .config/molecule/config.yml
-
-init: .venv/bin/activate .config/molecule/config.yml
+init: .venv/bin/activate
 
 lint: init
 	$(PYFLAKES) src/*/*.py
@@ -91,4 +85,3 @@ clean:
 
 distclean: clean
 	rm -rf .venv
-	rm -rf .config
