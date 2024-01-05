@@ -22,11 +22,6 @@
       vars:
         resource: "{{ item }}"
       with_items: "{{ molecule_yml.verifier.resources }}"
-      when:
-        # Check for new-style resources keyword.
-        - molecule_yml.verifier.resources is defined
-        - molecule_yml.verifier.resources | count > 0
-        - molecule_yml.verifier.resources[0] is mapping
 
     - name: "Install variable files."
       include_tasks: "tasks/variablefile.yml"
@@ -40,16 +35,3 @@
         test_source: "{{ item }}"
       when: item.enabled | d(True)
       with_items: "{{ molecule_yml.verifier.tests | d([]) }}"
-
-    - name: "Old-style resources keyword."
-      include_tasks: tasks/compat/resources.yml
-      when:
-        - molecule_yml.verifier.resources is defined
-        - molecule_yml.verifier.resources | count > 0
-        - not (molecule_yml.verifier.resources[0] is mapping)
-
-    - name: "Old-style task sources keywords."
-      include_tasks: tasks/compat/test_sources.yml
-      when: >
-        molecule_yml.verifier.test_data is defined or
-        molecule_yml.verifier.test_repos is defined

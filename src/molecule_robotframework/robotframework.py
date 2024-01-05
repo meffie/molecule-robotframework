@@ -233,22 +233,18 @@ class Robotframework(Verifier):
     def data_sources(self):
         data_sources = []
         verifier = self._config.config['verifier']
-        if 'tests' in verifier:
-            for test in verifier['tests']:
-                name = test.get('name', 'tests')
-                enabled = as_boolean(test.get('enabled', 'yes'))
-                if not enabled:
-                    continue
-                execute = test.get('execute', [''])
-                if not isinstance(execute, list):
-                    execute = [execute]
-                for e in execute:
-                    ds = os.path.join(name, e)
-                    if ds not in data_sources:
-                        data_sources.append(ds)
-        else:
-            # For compatibility with old versions.
-            data_sources = verifier.get('data_sources', ['tests'])
+        for test in verifier['tests']:
+            name = test.get('name', 'tests')
+            enabled = as_boolean(test.get('enabled', 'yes'))
+            if not enabled:
+                continue
+            execute = test.get('execute', [''])
+            if not isinstance(execute, list):
+                execute = [execute]
+            for e in execute:
+                ds = os.path.join(name, e)
+                if ds not in data_sources:
+                    data_sources.append(ds)
         LOG.debug("data_sources=%s", data_sources)
         return data_sources
 
