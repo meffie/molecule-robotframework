@@ -6,9 +6,7 @@ collective.checkdocs
 twine
 sphinx
 sphinx-rtd-theme
-#python-vagrant
-#molecule[ansible]
-#molecule-docker
-#molecule-vagrant
-#molecule-virtup
-#molecule-proxmox
+ansible
+python-vagrant
+molecule
+molecule-plugins[vagrant]

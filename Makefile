@@ -36,6 +36,7 @@ help:
 	$(PIP) install -U pip wheel
 	$(PIP) install -r requirements.txt
 	$(PIP) install -e .
+	$(PYTHON) patch_molecule_schema.py
 	touch .venv/bin/activate
 
 init: .venv/bin/activate
