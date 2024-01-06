@@ -3,7 +3,6 @@ import subprocess
 import glob
 from pathlib import Path
 from contextlib import contextmanager
-from tempfile import TemporaryDirectory
 
 import pytest
 

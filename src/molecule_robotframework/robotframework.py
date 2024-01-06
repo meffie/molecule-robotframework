@@ -347,10 +347,6 @@ class Robotframework(Verifier):
             }
         }
 
-    def template_dir(self):
-        """Return the path to the cookiecutter templates for molecule init."""
-        return os.path.abspath(os.path.join(os.path.dirname(__file__), "cookiecutter"))
-
     def _get_bundled_playbook(self, name):
         """Lookup our bundled playbook."""
         playbooks = os.path.abspath(os.path.join(os.path.dirname(__file__), "playbooks"))
