@@ -75,6 +75,11 @@ def molecule_scenario(image, scenario):
             rc = proc.wait()
         assert rc == 0, 'See "%s".' % logfile
 
+def test_molecule_list():
+    proc = subprocess.Popen(['molecule', 'list'])
+    rc = proc.wait()
+    assert rc == 0
+
 @pytest.mark.parametrize('image', sorted(images))
 def test_platform(image):
     molecule_scenario(image, 'default')
