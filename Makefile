@@ -1,81 +1,58 @@
 # Copyright 2020-2021 Sine Nomine Associates
+#
+# This is a helper makefile to run tox. Run tox directly if make is not
+# available:
+#
+#    $ python3 -m venv .venv
+#    $ source .venv/bin/activate
+#    (venv) $ pip install -U pip setuptools
+#    (venv) $ pip install tox
+#    (venv) $ tox
+#
 
-.PHONY: help init lint import test docs sdist wheel rpm deb upload clean distclean
-
-ROLE_VERSION=1.7.0
-ROLE_REPO=https://github.com/meffie/ansible-role-robotframework.git
 PYTHON3=python3
-BIN=.venv/bin
-PIP=$(BIN)/pip
-PYTHON=$(BIN)/python
-PYFLAKES=$(BIN)/pyflakes
-YAMLLINT=$(BIN)/yamllint
-PYTEST=$(BIN)/pytest
-TWINE=$(BIN)/twine
-BASH=/bin/bash
+PIP=.venv/bin/pip
+TOX=.venv/bin/tox
 
+.PHONY: help
 help:
 	@echo "usage: make <target>"
 	@echo ""
 	@echo "targets:"
-	@echo "  init       create python virtual env"
-	@echo "  lint       run linter"
-	@echo "  import     import external ansible roles"
+	@echo "  init       create python venv to run tox"
+	@echo "  lint       run lint checks"
 	@echo "  test       run tests"
-	@echo "  docs       build html docs"
-	@echo "  sdist      create source distribution"
-	@echo "  wheel      create wheel distribution"
-	@echo "  rpm        create rpm package"
-	@echo "  deb        create deb package"
-	@echo "  upload     upload to pypi.org"
+	@echo "  docs       generate html docs"
+	@echo "  release    upload to pypi.org"
 	@echo "  clean      remove generated files"
-	@echo "  distclean  remove generated files and virtual env"
+	@echo "  distclean  remove generated files and venvs"
 
-.venv/bin/activate: requirements.txt Makefile
+.venv/bin/activate: Makefile
 	$(PYTHON3) -m venv .venv
-	$(PIP) install -U pip wheel
-	$(PIP) install -r requirements.txt
-	$(PIP) install -e .
+	$(PIP) install -U pip
+	$(PIP) install tox
 	touch .venv/bin/activate
 
+.PHONY: init
 init: .venv/bin/activate
 
+.PHONY: lint
 lint: init
-	$(PYFLAKES) src/*/*.py
-	$(PYFLAKES) tests/*.py
-	$(YAMLLINT) src/*/playbooks/*.yml
-	$(YAMLLINT) tests/molecule/default/*.yml
-	$(PYTHON) setup.py -q checkdocs
+	$(TOX) -e lint
 
-import:
-	mkdir -p src/molecule_robotframework/playbooks/roles/robotframework
-	git clone $(ROLE_REPO) /tmp/ansible-role-robotframework.git
-	(cd /tmp/ansible-role-robotframework.git && git archive $(ROLE_VERSION)) | \
-	  (cd src/molecule_robotframework/playbooks/roles/robotframework && tar xf -)
-	rm -rf src/molecule_robotframework/playbooks/roles/robotframework/molecule
-	rm -rf /tmp/ansible-role-robotframework.git
+.PHONY: test check
+test check: lint
+	$(TOX)
 
-check test: init lint
-	$(BASH) -c '. .venv/bin/activate && pytest -v $(T) tests'
+.PHONY: docs
+docs: init
+	$(TOX) -e docs
 
-doc docs:
-	$(MAKE) -C docs html
+.PHONY: release upload
+release upload: init
+	$(TOX) -e release
 
-sdist: init
-	$(PYTHON) setup.py sdist
-
-wheel: init
-	$(PYTHON) setup.py bdist_wheel
-
-rpm: init
-	$(PYTHON) setup.py bdist_rpm
-
-deb: init
-	$(PYTHON) setup.py --command-packages=stdeb.command bdist_deb
-
-upload: init sdist wheel
-	$(TWINE) upload dist/*
-
+.PHONY: clean
 clean:
 	rm -rf .pytest_cache src/*/__pycache__ tests/__pycache__
 	rm -rf tests/molecule/*/output
@@ -83,5 +60,6 @@ clean:
 	rm -rf .eggs *.egg-info src/*.egg-info
 	rm -rf docs/build
 
-distclean: clean
-	rm -rf .venv
+.PHONY: reallyclean distclean
+reallyclean distclean: clean
+	rm -rf .config .venv .tox
