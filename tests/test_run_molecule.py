@@ -19,7 +19,6 @@ images = [
 ]
 
 logdir = Path('/tmp/molecule-robotframework')
-driver = os.getenv('MOLECULE_DRIVER')
 
 # Remove color escape codes for logs.
 ansible_vars = {
@@ -66,8 +65,6 @@ def molecule_scenario(image, scenario):
         testdir = Path(__file__).resolve().parent
         with chdir(testdir):
             cmd = ['molecule', 'test', '--scenario-name', scenario]
-            if driver:
-                cmd.append('--driver-name=%s' % driver)
             for n, v in ansible_vars.items():
                 os.environ[n] = v
             if 'debian9' in image:
