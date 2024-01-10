@@ -24,6 +24,9 @@ setuptools.setup(
         'molecule.verifier': [
             'robotframework = molecule_robotframework.robotframework:Robotframework',
         ],
+        'console_scripts': [
+            'patch-molecule-schema = molecule_robotframework.patch_molecule_schema:main',
+        ],
     },
     install_requires=[
         # molecule plugins are not allowed to mention Ansible as a direct dependency

@@ -1,4 +1,13 @@
 ---
+- name: "Target system distribution names."
+  debug:
+    msg:
+      - "{{ ansible_distribution }}-{{ ansible_distribution_version }}"
+      - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}"
+      - "{{ ansible_distribution }}"
+      - "{{ ansible_os_family }}"
+      - "{{ ansible_system }}"
+
 - name: "Install system packages."
   include_tasks: "{{ item }}"
   with_first_found:
@@ -8,21 +17,15 @@
     - "{{ role_path }}/tasks/packages/{{ ansible_os_family }}.yml"
     - "{{ role_path }}/tasks/packages/unknown.yml"
 
-- name: "Install Robot Framework."
-  # Note: Also install the optional pyyaml to support yaml format robotframework
-  #       variable files.
-  become: yes
+- name: "Create Python3 virtualenv."
   pip:
-    state: present
-    name:
-      - "{{ robotframework_package_name }}{{ robotframework_package_version_spec }}"
-      - "pyyaml{{ pyyaml_version | d('') }}"
-    executable: "{{ pip_executable | d('pip3') }}"
+    state: latest
+    name: pip
+    virtualenv: ~/.robotframework_venv
+    virtualenv_command: "{{ _robotframework_virtualenv_command }}"
 
-- name: "Install Robot Framework Test Libraries."
-  become: yes
+- name: "Install Robot Framework."
   pip:
     state: present
-    name: "{{ robotframework_external_libraries }}"
-    executable: "{{ pip_executable | d('pip3') }}"
-  when: robotframework_external_libraries | count > 0
+    name: "{{ robotframework_requirements + robotframework_libraries }}"
+    virtualenv: ~/.robotframework_venv

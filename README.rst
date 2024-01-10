@@ -17,31 +17,28 @@ Documentation: `https://molecule-robot-framework-plugin.readthedocs.io <https://
 Installation and Usage
 ======================
 
-Install molecule-robotframework:
+Install molecule and molecule-robotframework:
 
 .. code-block::
 
-   pip install molecule molecule-robotframework
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+    (.venv) $ pip install molecule molecule-robotframework
+    (.venv) $ patch-molecule-schema
 
-Create a new role with molecule using the ``robotframework`` verifier:
-
-.. code-block::
-
-   molecule init role <role_name> --verifier-name robotframework [--driver-name <name>]
-
-Create a new scenario for an existing role or playbook:
+Create a new scenario with molecule:
 
 .. code-block::
 
-   molecule init scenario <scenario_name> --verifier-name robotframework [--driver-name <name>]
+    (.venv) $ molecule init scenario
 
-Copy the Robot Framework test data (.robot files) to a directory the Ansible
-controller. The default location is the directory ``molecule/<scenario_name>/tests``.
+Edit the ``molecule.yml`` file and set the verifier to ``molecule-robotframework``:
 
-Configure the desired ``robot`` options in the ``molecule.yml`` verifier section.
+.. code-block::
 
-Execute ``molecule test`` on the role or scenario to run the verify playbook and run
-``robot`` on the molecule instance.
+    ...
+    verifier:
+      name: molecule-robotframework
 
 .. _authors:
 

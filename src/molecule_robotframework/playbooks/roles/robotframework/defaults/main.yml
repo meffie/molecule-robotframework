@@ -1,4 +1,13 @@
 ---
-robotframework_package_name: robotframework
-robotframework_package_version_spec: ""
-robotframework_external_libraries: []
+
+# pip requirements to install Robot Framework.
+# PyYaml is needed to support robot variable files in yaml format.
+robotframework_requirements:
+  - robotfamework
+  - PyYAML
+
+# pip requirements for additional Robot Framework test libraries.
+robotframework_libraries: []
+
+# Command to create the Python3 virtualenv.
+_robotframework_virtualenv_command: /usr/bin/python3 -m venv

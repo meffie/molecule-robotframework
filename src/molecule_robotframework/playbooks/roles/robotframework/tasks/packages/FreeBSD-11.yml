@@ -1,12 +1,12 @@
 ---
-- name: "Install Python3 (FreeBSD)."
+- name: "Install Python3 (FreeBSD-11)."
   become: yes
   pkgng:
     state: present
     name:
       - python3
-      - py39-packaging
+      - py38-packaging
 
-- name: "Set command to create a Python3 virtualenv (FreeBSD)."
+- name: "Set command to create a Python3 virtualenv (FreeBSD-11)."
   set_fact:
     _robotframework_virtualenv_command: "/usr/local/bin/python3 -m venv"

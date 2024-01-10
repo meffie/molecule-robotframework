@@ -1,21 +1,28 @@
 ---
 dependency:
   name: galaxy
+
 driver:
   name: vagrant
+
 platforms:
   - name: instance01
-    box: "${IMAGE:-generic/debian11}"
+    box: "${BOX:-generic/debian12}"
+    box_version: "${BOX_VERSION:-4.3.10}"
+    config_options:
+      ssh.insert_key: false
     groups:
       - testers
+
 provisioner:
   name: ansible
   inventory:
     group_vars:
       testers:
         example_variable: this is a test
+
 verifier:
-  name: robotframework
+  name: molecule-robotframework
   options:
     group: testers
     variablefiles:

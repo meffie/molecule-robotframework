@@ -1,0 +1,6 @@
+---
+- name: "Install Python3 (Solaris)."
+  become: yes
+  pkg5:
+    state: present
+    name: python-37

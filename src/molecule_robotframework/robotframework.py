@@ -1,4 +1,4 @@
-#  Copyright (c) 2020-2023 Sine Nomine Associates
+#  Copyright (c) 2020-2024 Sine Nomine Associates
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to
@@ -33,7 +33,9 @@ from molecule import util
 from molecule.provisioner import ansible_playbook, ansible_playbooks
 from molecule.api import Verifier
 
+
 LOG = logger.get_logger(__name__)
+
 
 def as_boolean(data):
     if isinstance(data, bool):
@@ -44,7 +46,8 @@ def as_boolean(data):
 
 
 def dict2args(data):
-    """Convert a dictionary of options to command like arguments.
+    """
+    Convert a dictionary of options to command like arguments.
 
     Note: This implementation supports arguments with multiple values.
     """
@@ -62,8 +65,12 @@ def dict2args(data):
                 result.extend([flag, str(v)])
     return result
 
+
 def dict2lines(data, getlines=False):
-    """Convert a dictionary of options to a list of lines for robot --argumentfile."""
+    """
+    Convert a dictionary of options to a list of lines for robot
+    --argumentfile.
+    """
     result = []
     for k, v in data.items():
         if v is not False:
@@ -78,35 +85,37 @@ def dict2lines(data, getlines=False):
                 result.append(join_args([flag, str(v)]) + '\n')
     return result
 
+
 class Robotframework(Verifier):
     """
     `Robotframework`_ is not default test verifier.
 
-    The robotframework test verifier runs the verify playbook to install
-    Robot Framework, external Robot Framework libraries, and the test data
-    sources to the test instances, then runs the ``robot`` command, showing the
-    live test output. Finally, the optional ``verify_fetch_report`` playbook is
-    executed to retrieve the test logs.
+    The robotframework test verifier runs the verify playbook to install Robot
+    Framework, external Robot Framework libraries, and the test data sources to
+    the test instances, then runs the ``robot`` command, showing the live test
+    output. Finally, the optional ``verify_fetch_report`` playbook is executed
+    to retrieve the test logs.
 
-    Bundled ``verify.yml`` and ``verify_fetch_report.yml`` playbooks are provided
-    by the plugin. You can customize these plays by creating ``verify.yml``
-    and/or ``verify_fetch_report.yml`` in your scenario directory.
+    Bundled ``verify.yml`` and ``verify_fetch_report.yml`` playbooks are
+    provided by the plugin. You can customize these plays by creating
+    ``verify.yml`` and/or ``verify_fetch_report.yml`` in your scenario
+    directory.
 
     The testing can be disabled by setting ``enabled`` to False.
 
     .. code-block:: yaml
 
         verifier:
-          name: robotframework
+          name: molecule-robotframework
           enabled: False
 
-    Options to ``robot`` can be passed to through the options dict. See the ``robot``
-    command help for a complete list of options.
+    Options to ``robot`` can be passed to through the options dict. See the
+    ``robot`` command help for a complete list of options.
 
     .. code-block:: yaml
 
         verifier:
-          name: robotframework
+          name: molecule-robotframework
           options:
             robot:
               dryrun: yes
@@ -118,18 +127,17 @@ class Robotframework(Verifier):
     .. code-block:: yaml
 
         verifier:
-          name: robotframework
+          name: molecule-robotframework
           env:
             ROBOT_SYSLOG_FILE: /tmp/syslog.txt
 
-    Paths to the test sources to be copied to the test instance(s).
-    Provide a list of fully qualified paths to directories on the
-    controller.
+    Paths to the test sources to be copied to the test instance(s).  Provide a
+    list of fully qualified paths to directories on the controller.
 
     .. code-block:: yaml
 
         verifier:
-          name: robotframework
+          name: molecule-robotframework
           options:
             tests:
               - name: uploaded-from-directory
@@ -140,9 +148,9 @@ class Robotframework(Verifier):
                 source: "https://gitrepo-url"
                 version: branch-name
 
-    The test source 'name' specifies the destination path to install files
-    on the test instance(s). The directory will be created on the instance
-    if it does not already exist.
+    The test source 'name' specifies the destination path to install files on
+    the test instance(s). The directory will be created on the instance if it
+    does not already exist.
 
     The test paths to be based to robot can be set with the execute keyword.
     This can be a single string or list of strings.
@@ -150,7 +158,7 @@ class Robotframework(Verifier):
     .. code-block:: yaml
 
         verifier:
-          name: robotframework
+          name: molecule-robotframework
           options:
             tests:
               - name: mytests
@@ -160,13 +168,13 @@ class Robotframework(Verifier):
                   - more/second.robot
                   - yet-more-tests
 
-    External Robot Framework libraries to install on the test instances
-    with pip.
+    External Robot Framework libraries to install on the test instances with
+    pip.
 
     .. code-block:: yaml
 
         verifier:
-          name: robotframework
+          name: molecule-robotframework
           options:
             libraries:
               - robotframework-sshlibrary
@@ -177,7 +185,7 @@ class Robotframework(Verifier):
     .. code-block:: yaml
 
         verifier:
-          name: robotframework
+          name: molecule-robotframework
           options:
             group: testers
 
@@ -191,7 +199,7 @@ class Robotframework(Verifier):
 
     @property
     def name(self):
-        return 'robotframework'
+        return 'molecule-robotframework'
 
     @property
     def default_options(self):
@@ -205,8 +213,8 @@ class Robotframework(Verifier):
     def playbooks(self):
         if not self._playbooks:
             # Inject a default verify_fetch_report playbook filename.
-            if 'verify_fetch_report' not in self._config.config['provisioner']['playbooks']:
-                self._config.config['provisioner']['playbooks']['verify_fetch_report'] = 'verify_fetch_report.yml'
+            if 'verify_fetch_report' not in self._config.config['provisioner']['playbooks']:   # noqa: E501
+                self._config.config['provisioner']['playbooks']['verify_fetch_report'] = 'verify_fetch_report.yml'  # noqa: E501
             self._playbooks = ansible_playbooks.AnsiblePlaybooks(self._config)
         return self._playbooks
 
@@ -219,7 +227,7 @@ class Robotframework(Verifier):
             playbook = self._get_bundled_playbook(name)
         pb = ansible_playbook.AnsiblePlaybook(playbook, self._config)
         # Target just the testers (all by default.)
-        pb.add_cli_arg('extra_vars', f'molecule_robotframework_hosts={self.group}')
+        pb.add_cli_arg('extra_vars', f'molecule_robotframework_hosts={self.group}')  # noqa: E501
         pb.execute()
 
     @property
@@ -263,20 +271,24 @@ class Robotframework(Verifier):
     @property
     def test_hosts(self):
         inventory = self._config.provisioner.inventory
-        return inventory.get(self.group, inventory.get('all', {})).get('hosts', {})
+        return inventory.get(self.group,
+                             inventory.get('all', {})).get('hosts', {})
 
     @property
     def argumentfile(self):
-        return os.path.join(self._config.scenario.ephemeral_directory, 'robotrc')
+        return os.path.join(self._config.scenario.ephemeral_directory,
+                            'robotrc')
 
     def bake(self, name, host):
-        """Prepare a command to run robot on a test instance."""
+        """
+        Prepare a command to run robot on a test instance.
+        """
 
         # The robot command line.
         robot_cmd = [
-            'robot',
+            os.path.expanduser('.robotframework_venv/bin/robot'),
             *dict2args(self.robot_options),
-            *self.data_sources # last
+            *self.data_sources  # last
         ]
         LOG.info('robot command: %s' % ' '.join(robot_cmd))
 
@@ -293,12 +305,17 @@ class Robotframework(Verifier):
                 ssh_args.extend(['-p', str(ssh_port)])
             if ssh_ident:
                 ssh_args.extend(['-i', ssh_ident])
-            ssh_dest = '@'.join([ssh_user, ssh_host]) if ssh_user else ssh_host
-            LOG.info('ssh command: %s' % ' '.join(['ssh', *ssh_args, ssh_dest]))
+            if ssh_user:
+                ssh_dest = '@'.join([ssh_user, ssh_host])
+            else:
+                ssh_dest = ssh_host
+            LOG.info('ssh command: %s' % ' '.join(
+                ['ssh', *ssh_args, ssh_dest]))
 
             cmd = ['ssh', *ssh_args, ssh_dest, *robot_cmd]
         else:
-            util.sysexit_with_message(f'Unsupported connection {ansible_connection}', 1)
+            util.sysexit_with_message(
+                'Unsupported connection %s' % (ansible_connection,), 1)
 
         self._robot_command = cmd
 
@@ -361,9 +378,13 @@ class Robotframework(Verifier):
         }
 
     def _get_bundled_playbook(self, name):
-        """Lookup our bundled playbook."""
-        playbooks = os.path.abspath(os.path.join(os.path.dirname(__file__), "playbooks"))
+        """
+        Lookup our bundled playbook.
+        """
+        playbooks = os.path.abspath(
+                      os.path.join(os.path.dirname(__file__), "playbooks"))
         path = os.path.join(playbooks, f"{name}.yml")
         if not os.path.isfile(path):
-            raise AssertionError(f"Failed to lookup bundled {name}.yml playbook.")
+            raise AssertionError(
+                'Failed to lookup bundled %s.yml playbook.' % name)
         return path

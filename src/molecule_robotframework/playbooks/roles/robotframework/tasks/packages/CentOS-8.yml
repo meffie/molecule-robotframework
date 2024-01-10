@@ -1,6 +1,7 @@
 ---
-- name: Ensure python pip is installed.
+- name: "Install Python3 (CentOS-8)."
   become: yes
   yum:
     state: present
-    name: python3-pip
+    name:
+      - python3

@@ -6,10 +6,8 @@
       import_role:
         name: robotframework
       vars:
-        robotframework_install: "{{ molecule_yml.verifier.options.install | d('auto') }}"
-        robotframework_package_name: "{{ molecule_yml.verifier.options.package_name | d('robotframework') }}"
-        robotframework_package_version_spec: "{{ molecule_yml.verifier.options.package_version_spec | d('') }}"
-        robotframework_external_libraries: "{{ molecule_yml.verifier.options.libraries | d([]) }}"
+        robotframework_requirements: "{{ molecule_yml.verifier.options.requirements | d(['robotframework', 'pyyaml']) }}"
+        robotframework_libraries: "{{ molecule_yml.verifier.options.libraries | d([]) }}"
 
     - name: "Copy Robot Framework argument file."
       copy:
