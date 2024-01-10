@@ -1,24 +1,25 @@
 ---
-- name: Install python pip.
+- name: "Install system packages."
   include_tasks: "{{ item }}"
   with_first_found:
-    - "{{ role_path }}/tasks/pip/{{ ansible_distribution | replace(' ', '_') }}-{{ ansible_distribution_version }}.yml"
-    - "{{ role_path }}/tasks/pip/{{ ansible_distribution | replace(' ', '_') }}-{{ ansible_distribution_major_version }}.yml"
-    - "{{ role_path }}/tasks/pip/{{ ansible_distribution | replace(' ', '_') }}.yml"
-    - "{{ role_path }}/tasks/pip/{{ ansible_os_family }}.yml"
-    - "{{ role_path }}/tasks/pip/unknown.yml"
+    - "{{ role_path }}/tasks/packages/{{ ansible_distribution | replace(' ', '_') }}-{{ ansible_distribution_version }}.yml"
+    - "{{ role_path }}/tasks/packages/{{ ansible_distribution | replace(' ', '_') }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ role_path }}/tasks/packages/{{ ansible_distribution | replace(' ', '_') }}.yml"
+    - "{{ role_path }}/tasks/packages/{{ ansible_os_family }}.yml"
+    - "{{ role_path }}/tasks/packages/unknown.yml"
 
-- name: Install Robot Framework.
+- name: "Install Robot Framework."
+  # Note: Also install the optional pyyaml to support yaml format robotframework
+  #       variable files.
   become: yes
   pip:
     state: present
     name:
-      # Install pyyaml so `robot` will support yaml format variable files.
-      - "pyyaml{{ pyyaml_version | d('') }}"
       - "{{ robotframework_package_name }}{{ robotframework_package_version_spec }}"
+      - "pyyaml{{ pyyaml_version | d('') }}"
     executable: "{{ pip_executable | d('pip3') }}"
 
-- name: Install Robot Framework Test Libraries.
+- name: "Install Robot Framework Test Libraries."
   become: yes
   pip:
     state: present
