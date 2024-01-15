@@ -285,17 +285,18 @@ class Robotframework(Verifier):
         """
 
         # The robot command line.
+        home = self._get_home_directory(host)
         robot_cmd = [
-            os.path.expanduser('.robotframework_venv/bin/robot'),
+            os.path.join(home, '.robotframework_venv/bin/robot'),
             *dict2args(self.robot_options),
             *self.data_sources  # last
         ]
         LOG.info('robot command: %s' % ' '.join(robot_cmd))
 
         ansible_connection = host.get('ansible_connection', 'ssh')
-        if ansible_connection == 'docker':
+        if 'docker' in ansible_connection:
             cmd = ['docker', 'exec', name, *robot_cmd]
-        elif ansible_connection == 'ssh':
+        elif 'ssh' in ansible_connection:
             ssh_host = host.get('ansible_host', name)
             ssh_user = host.get('ansible_user', None)
             ssh_port = host.get('ansible_port', None)
@@ -376,6 +377,17 @@ class Robotframework(Verifier):
                 },
             }
         }
+
+    def _get_home_directory(self, host):
+        home = ''
+        connection = host.get('ansible_connection', 'ssh')
+        if 'docker' in connection:
+            home = '/root'
+        elif 'ssh' in connection:
+            user = host.get('ansible_user', None)
+            if user:
+                home = os.path.join('/home', user)
+        return home
 
     def _get_bundled_playbook(self, name):
         """
