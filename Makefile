@@ -21,7 +21,8 @@ help:
 	@echo "targets:"
 	@echo "  init       create python venv to run tox"
 	@echo "  lint       run lint checks"
-	@echo "  test       run tests"
+	@echo "  check      run quick tests"
+	@echo "  test       run all tests"
 	@echo "  docs       generate html docs"
 	@echo "  release    upload to pypi.org"
 	@echo "  clean      remove generated files"
@@ -40,8 +41,12 @@ init: .venv/bin/activate
 lint: init
 	$(TOX) -e lint
 
-.PHONY: test check
-test check: lint
+.PHONY: check
+check: lint
+	$(TOX) -e py312-mol603 -- -k 'not vagrant'
+
+.PHONY: test
+test: lint
 	$(TOX)
 
 .PHONY: docs

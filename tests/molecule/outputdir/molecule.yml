@@ -3,14 +3,11 @@ dependency:
   name: galaxy
 
 driver:
-  name: vagrant
+  name: docker
 
 platforms:
   - name: instance01
-    box: "${BOX:-generic/debian12}"
-    box_version: "${BOX_VERSION:-4.3.10}"
-    config_options:
-      ssh.insert_key: false
+    image: "${IMAGE:-python}"
     groups:
       - testers
 
