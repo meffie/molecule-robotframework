@@ -1,4 +1,7 @@
 ---
+# Location of the virtualenv to install Robot Framework. The
+# virtualenv will be created if missing.
+robotframework_virtualenv: "{{ ansible_env['HOME'] }}/.robotframework_venv"
 
 # pip requirements to install Robot Framework.
 # PyYaml is needed to support robot variable files in yaml format.

@@ -2,6 +2,13 @@
 - name: Verify
   hosts: "{{ molecule_robotframework_hosts | d('all') }}"
   tasks:
+    - name: "Save host variables."
+      run_once: true
+      delegate_to: localhost
+      copy:
+        content: "{{ hostvars | to_nice_json }}"
+        dest: "{{ molecule_ephemeral_directory }}/hostvars.json"
+
     - name: "Install Robot Framework."
       import_role:
         name: robotframework

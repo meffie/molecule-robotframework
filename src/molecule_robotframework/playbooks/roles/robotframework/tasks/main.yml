@@ -21,11 +21,11 @@
   pip:
     state: latest
     name: pip
-    virtualenv: ~/.robotframework_venv
+    virtualenv: "{{ robotframework_virtualenv }}"
     virtualenv_command: "{{ _robotframework_virtualenv_command }}"
 
 - name: "Install Robot Framework."
   pip:
     state: present
     name: "{{ robotframework_requirements + robotframework_libraries }}"
-    virtualenv: ~/.robotframework_venv
+    virtualenv: "{{ robotframework_virtualenv }}"

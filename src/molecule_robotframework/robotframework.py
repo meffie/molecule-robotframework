@@ -21,6 +21,7 @@
 """Robot Framework Verifier Module."""
 
 import os
+import json
 
 try:
     from shlex import join as join_args
@@ -279,13 +280,25 @@ class Robotframework(Verifier):
         return os.path.join(self._config.scenario.ephemeral_directory,
                             'robotrc')
 
+    @property
+    def hostvars(self):
+        """
+        The verify playbook saves the collected host variables
+        to a json file in the ephemeral directory.
+        """
+        directory = self._config.scenario.ephemeral_directory
+        filename = os.path.join(directory, 'hostvars.json')
+        with open(filename) as f:
+            hostvars = json.load(f)
+        return hostvars
+
     def bake(self, name, host):
         """
         Prepare a command to run robot on a test instance.
         """
 
         # The robot command line.
-        home = self._get_home_directory(host)
+        home = self.hostvars[name]['ansible_env']['HOME']
         robot_cmd = [
             os.path.join(home, '.robotframework_venv/bin/robot'),
             *dict2args(self.robot_options),
@@ -377,17 +390,6 @@ class Robotframework(Verifier):
                 },
             }
         }
-
-    def _get_home_directory(self, host):
-        home = ''
-        connection = host.get('ansible_connection', 'ssh')
-        if 'docker' in connection:
-            home = '/root'
-        elif 'ssh' in connection:
-            user = host.get('ansible_user', None)
-            if user:
-                home = os.path.join('/home', user)
-        return home
 
     def _get_bundled_playbook(self, name):
         """
