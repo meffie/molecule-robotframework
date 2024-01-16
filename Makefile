@@ -24,6 +24,7 @@ help:
 	@echo "  check      run quick tests"
 	@echo "  test       run all tests"
 	@echo "  docs       generate html docs"
+	@echo "  preview    local preview html docs"
 	@echo "  release    upload to pypi.org"
 	@echo "  clean      remove generated files"
 	@echo "  distclean  remove generated files and venvs"
@@ -52,6 +53,10 @@ test: lint
 .PHONY: docs
 docs: init
 	$(TOX) -e docs
+
+.PHONY: preview
+preview: docs
+	xdg-open docs/build/html/index.html
 
 .PHONY: release upload
 release upload: init

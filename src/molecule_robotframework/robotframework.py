@@ -169,6 +169,18 @@ class Robotframework(Verifier):
                   - more/second.robot
                   - yet-more-tests
 
+    The version of Robot Framwork to be installed may be specified with
+    the 'requirements' keyword, which accepts a list of pip requirement
+    specifications.
+
+    .. code-block:: yaml
+
+        verifier:
+          name: molecule-robotframework
+          options:
+            requirements:
+              - robotframework==6.1.1
+
     External Robot Framework libraries to install on the test instances with
     pip.
 

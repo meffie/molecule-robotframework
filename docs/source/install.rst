@@ -1,8 +1,11 @@
 Installation
 ============
 
-Install molecule-robotframework:
+Install molecule-robotframework with pip.
 
 .. code-block::
 
-   pip install molecule molecule-robotframework
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+    (.venv) $ pip install molecule molecule-robotframework
+    (.venv) $ patch-molecule-schema

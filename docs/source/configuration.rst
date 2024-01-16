@@ -28,19 +28,12 @@ group
 
   Default: all
 
-install
-  Indicates if Robot Framework and the test libraries are to be installed before
-  running the tests. Values are ``always``, ``never``, or ``auto``. When the
-  value is ``never``, the verifier does not install the Robot Framework. When
-  the value is ``always``, the verifier ensures the Robot Framework is installed
-  before running the ``robot`` command. When the value is ``auto``, the verifier
-  installs the Robot Framework the first time it is run, and installation will
-  be skipped on subsequent runs.  When Robot Framework is installed, first
-  ``pip`` will be installed on the instance, then ``pip`` will be used to
-  install Robot Framework and any test libraries indicated by the ``libraries``
-  configuration option (see ``libraries`` below).
+requirements
+  A list of pip requirement specifications to install the Robot Framework. This
+  can be used to specify a particular version of Robot Framework to be used
+  to run the tests.
 
-  Default: auto
+  Default: ['robotframework', 'PyYAML']
 
 libraries
   A list of Robot Framework libraries to be installed with ``pip`` when ``install``
