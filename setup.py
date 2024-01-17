@@ -30,7 +30,7 @@ setuptools.setup(
     },
     install_requires=[
         # molecule plugins are not allowed to mention Ansible as a direct dependency
-        'molecule>=3.2.0',
+        'molecule>=6.0.0,<=6.0.3',
         'pyyaml>=5.1',
     ],
     classifiers=[
@@ -38,5 +38,5 @@ setuptools.setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.10',
 )
