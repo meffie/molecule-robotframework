@@ -9,3 +9,6 @@ build/
 
 # test artifacts
 .env.yml
+
+# readthedocs configuration
+!.readthedocs.yaml
