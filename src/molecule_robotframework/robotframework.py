@@ -321,7 +321,7 @@ class Robotframework(Verifier):
         ansible_connection = host.get('ansible_connection', 'ssh')
         if 'docker' in ansible_connection:
             cmd = ['docker', 'exec', name, *robot_cmd]
-        elif 'ssh' in ansible_connection:
+        elif 'ssh' in ansible_connection or 'smart' in ansible_connection:
             ssh_host = host.get('ansible_host', name)
             ssh_user = host.get('ansible_user', None)
             ssh_port = host.get('ansible_port', None)
