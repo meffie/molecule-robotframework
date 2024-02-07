@@ -1,0 +1,31 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  - name: instance01
+    image: "${IMAGE:-python}"
+    groups:
+      - testers
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: molecule-robotframework
+  options:
+    group: testers
+    requirements:
+      - robotframework==6.1.1
+      - PyYAML==6.0.1
+    libraries:
+      - file: ${MOLECULE_SCENARIO_DIRECTORY}/files/robotframework_openafslibrary-0.8.2.tar.gz
+    tests:
+      - source: ${MOLECULE_SCENARIO_DIRECTORY}/files/example.robot
+    robot:
+      exitonerror: yes
+      exclude: bogus
+      report: index.html

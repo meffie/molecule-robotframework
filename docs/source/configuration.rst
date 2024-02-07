@@ -36,10 +36,21 @@ requirements
   Default: ['robotframework', 'PyYAML']
 
 libraries
-  A list of Robot Framework libraries to be installed with ``pip`` when ``install``
-  is true or is 'auto' and this is the first time the verifier is run.
+  A list of Robot Framework libraries to be installed with ``pip`` in the
+  Python virtualenv. Specify a list of package names or file paths of
+  files on the controller to be uploaded and installed.
+  Package names are indicated by the ``name:`` key. Files are indicated
+  by the ``file:`` key.
 
   Default: (empty list)
+
+  Example:
+
+.. code-block:: yaml
+
+    libraries:
+      - name: SomeRobotFrameworkLibrary
+      - file: /path/to/MyLibrary-1.0.0.tar.gz
 
 tests
   List of dictionaries to specify the Robot Framework test sources to be

@@ -162,6 +162,10 @@ def test_variablefiles():
     molecule_test('variablefiles')
 
 
+def test_local_libs():
+    molecule_test('local-libs')
+
+
 @pytest.mark.parametrize('platform', sorted(PLATFORMS.keys()))
 def test_vagrant(platform):
     molecule_test('vagrant', platform)

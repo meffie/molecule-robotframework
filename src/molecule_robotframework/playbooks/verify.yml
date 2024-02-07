@@ -9,12 +9,41 @@
         content: "{{ hostvars | to_nice_json }}"
         dest: "{{ molecule_ephemeral_directory }}/hostvars.json"
 
+    - name: "Gather library package names."
+      ansible.builtin.set_fact:
+        lib: "{{ item.name | d(item) }}"
+      with_items: "{{ molecule_yml.verifier.options.libraries | d([]) }}"
+      when: item.name is defined or item | type_debug != 'dict'
+      register: _libs
+
+    - name: "Upload local library packages."
+      copy:
+        src: "{{ item.file }}"
+        dest: "/tmp/{{ item.file | basename }}"
+        mode: "0644"
+      with_items: "{{ molecule_yml.verifier.options.libraries | d([]) }}"
+      when: item.file is defined
+      register: _upload
+
+    - name: "Convert dicts to lists."
+      ansible.builtin.set_fact:
+        repo_libs: >
+          {{ _libs.results | d([]) |
+             selectattr('ansible_facts.lib', 'defined') |
+             map(attribute='ansible_facts.lib') |
+             list }}
+        local_libs: >
+          {{ _upload.results | d([]) |
+             selectattr('dest', 'defined') |
+             map(attribute='dest') |
+             list }}
+
     - name: "Install Robot Framework."
       import_role:
         name: robotframework
       vars:
         robotframework_requirements: "{{ molecule_yml.verifier.options.requirements | d(['robotframework', 'pyyaml']) }}"
-        robotframework_libraries: "{{ molecule_yml.verifier.options.libraries | d([]) }}"
+        robotframework_libraries: "{{ repo_libs + local_libs }}"
 
     - name: "Copy Robot Framework argument file."
       copy:
